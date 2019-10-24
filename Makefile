@@ -1,25 +1,45 @@
+# NAMES
 EXEC_NAME=mach
 
+# FOLDERS
+INCLUDE=include/
+SRC=src/
+BIN=bin/
+
+# COMPILER
 CC=gcc
 CFLAGS=-g -Wall
 LIBS=-lm
 
-all: $(EXEC_NAME)
+all: mk $(EXEC_NAME) rm
 
+# CREATE AND REMOVE BIN
+mk:
+	mkdir -p $(BIN)
+
+rm:
+	rm -rf $(BIN)
+
+# MAIN EXECUTABLE
 $(EXEC_NAME): main.o transforma.o afnd.o
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o $@ $(BIN)main.o $(BIN)transforma.o $(BIN)afnd.o $(CFLAGS)
 
-main.o: main.c afnd.h transforma.h
-	$(CC) -c -o $@ $< $(CFLAGS)
+# OBJECTS
+main.o: $(SRC)main.c $(INCLUDE)afnd.h $(INCLUDE)transforma.h
+	$(CC) -c -o $(BIN)$@ $< $(CFLAGS)
 
-transforma.o: transforma.c transforma.h
-	$(CC) -c -o $@ $< $(CFLAGS)
+transforma.o: $(SRC)transforma.c $(INCLUDE)transforma.h
+	$(CC) -c -o $(BIN)$@ $< $(CFLAGS)
 
-afnd.o: afnd.c afnd.h
-	$(CC) -c -o $@ $<
+afnd.o: $(SRC)afnd.c $(INCLUDE)afnd.h
+	$(CC) -c -o $(BIN)$@ $<
 
+# UTILS
 valgrind:
 	valgrind --leak-check=full ./$(EXEC_NAME)
 
+dot:
+	for f in *.dot; do dot -Tpng $f > $f.png; done
+
 clean:
-	rm *.o $(EXEC_NAME)
+	rm -f *.dot *.png $(EXEC_NAME)
