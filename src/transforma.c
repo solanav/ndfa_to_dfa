@@ -20,8 +20,12 @@ AFND *AFNDTransforma(AFND *afnd)
     // Create template for deterministic transformation
     AFND *afd = clone_tranform(afnd);
 
-    // Eliminate all lambdas  
-    lambda_parse_afnd(afnd, afd);
+    // Eliminate all lambdas
+	if (lambda_parse_afnd(afnd, afd) == -1)
+	{
+		printf("[ERROR] Lambda parser returned error\n");
+		return NULL;
+	}
 
-    return NULL;
+    return afd;
 }

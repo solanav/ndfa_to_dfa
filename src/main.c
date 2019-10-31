@@ -37,12 +37,6 @@ int main(int argc, char **argv)
 	AFNDInsertaLTransicion(p_afnd, "q3", "q5");
 	AFNDCierraLTransicion(p_afnd);
 
-	if (lambda_parser(p_afnd) == NULL)
-	{
-		printf("[ERROR] Lambda parser returned NULL\n");
-		return -1;
-	}
-
 	afd = AFNDTransforma(p_afnd);
 	if (afd == NULL)
 	{

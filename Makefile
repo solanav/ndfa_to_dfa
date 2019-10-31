@@ -8,7 +8,7 @@ BIN=bin/
 
 # COMPILER
 CC=gcc
-CFLAGS=-g -Wall
+CFLAGS=-g -Wall $(LIBS)
 LIBS=-lm
 
 all: mk $(EXEC_NAME) rm
@@ -21,17 +21,20 @@ rm:
 	rm -rf $(BIN)
 
 # MAIN EXECUTABLE
-$(EXEC_NAME): main.o transforma.o afnd.o
+$(EXEC_NAME): main.o transforma.o afnd.o lambda_parser.o
 	$(CC) -o $@ $(BIN)main.o $(BIN)transforma.o $(BIN)afnd.o $(CFLAGS)
 
 # OBJECTS
 main.o: $(SRC)main.c $(INCLUDE)afnd.h $(INCLUDE)transforma.h
 	$(CC) -c -o $(BIN)$@ $< $(CFLAGS)
 
-transforma.o: $(SRC)transforma.c $(INCLUDE)transforma.h
+transforma.o: $(SRC)transforma.c $(INCLUDE)transforma.h $(INCLUDE)lambda_parser.h
 	$(CC) -c -o $(BIN)$@ $< $(CFLAGS)
 
 afnd.o: $(SRC)afnd.c $(INCLUDE)afnd.h
+	$(CC) -c -o $(BIN)$@ $<
+
+lambda_parser.o: $(SRC)lambda_parser.c $(INCLUDE)lambda_parser.h
 	$(CC) -c -o $(BIN)$@ $<
 
 # UTILS
