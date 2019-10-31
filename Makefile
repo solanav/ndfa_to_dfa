@@ -22,7 +22,7 @@ rm:
 
 # MAIN EXECUTABLE
 $(EXEC_NAME): main.o transforma.o afnd.o lambda_parser.o
-	$(CC) -o $@ $(BIN)main.o $(BIN)transforma.o $(BIN)afnd.o $(CFLAGS)
+	$(CC) -o $@ $(BIN)main.o $(BIN)transforma.o $(BIN)afnd.o $(BIN)lambda_parser.o $(CFLAGS)
 
 # OBJECTS
 main.o: $(SRC)main.c $(INCLUDE)afnd.h $(INCLUDE)transforma.h
