@@ -38,14 +38,14 @@ int main(int argc, char **argv)
 	AFNDInsertaLTransicion(p_afnd, "q3", "q5");
 	AFNDCierraLTransicion(p_afnd);
 
+	AFNDImprime(stdout, p_afnd);
+
 	afd = AFNDTransforma(p_afnd);
 	if (afd == NULL)
 	{
 		printf(P_ERROR"AFNDTransforma returned NULL\n");
 		return ERROR;
 	}
-
-	AFNDImprime(stdout, afd);
 	AFNDADot(afd);
 
 	AFNDElimina(afd);

@@ -21,21 +21,24 @@ rm:
 	rm -rf $(BIN)
 
 # MAIN EXECUTABLE
-$(EXEC_NAME): main.o transforma.o afnd.o lambda_parser.o
-	$(CC) -o $@ $(BIN)main.o $(BIN)transforma.o $(BIN)afnd.o $(BIN)lambda_parser.o $(CFLAGS)
+$(EXEC_NAME): main.o transforma.o afnd.o afnd_plus.o lambda_parser.o
+	$(CC) -o $@ $(BIN)main.o $(BIN)transforma.o $(BIN)afnd.o $(BIN)afnd_plus.o $(BIN)lambda_parser.o $(CFLAGS)
 
 # OBJECTS
-main.o: $(SRC)main.c $(INCLUDE)afnd.h $(INCLUDE)transforma.h $(INCLUDE)types.h
+main.o: $(SRC)main.c
 	$(CC) -c -o $(BIN)$@ $< $(CFLAGS)
 
-transforma.o: $(SRC)transforma.c $(INCLUDE)transforma.h $(INCLUDE)lambda_parser.h $(INCLUDE)types.h
+afnd.o: $(SRC)afnd.c
+	$(CC) -c -o $(BIN)$@ $<
+
+afnd_plus.o: $(SRC)afnd_plus.c
 	$(CC) -c -o $(BIN)$@ $< $(CFLAGS)
 
-afnd.o: $(SRC)afnd.c $(INCLUDE)afnd.h $(INCLUDE)types.h
-	$(CC) -c -o $(BIN)$@ $<
+transforma.o: $(SRC)transforma.c
+	$(CC) -c -o $(BIN)$@ $< $(CFLAGS)
 
-lambda_parser.o: $(SRC)lambda_parser.c $(INCLUDE)lambda_parser.h $(INCLUDE)types.h $(INCLUDE)afnd.h
-	$(CC) -c -o $(BIN)$@ $<
+lambda_parser.o: $(SRC)lambda_parser.c
+	$(CC) -c -o $(BIN)$@ $< $(CFLAGS)
 
 # UTILS
 valgrind:

@@ -1,6 +1,7 @@
 #include <math.h>
 
 #include "../include/afnd.h"
+#include "../include/afnd_plus.h"
 #include "../include/transforma.h"
 #include "../include/lambda_parser.h"
 #include "../include/types.h"
