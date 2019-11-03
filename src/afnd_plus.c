@@ -32,3 +32,29 @@ int get_transitions(AFND *afnd, int **transitions, int state_index)
 
     return total_transitions;
 }
+
+
+bool contains_lambda(AFND *afnd, int state_index)
+{
+    return false;
+}
+
+
+int * actualStates(AFND *afnd)
+{
+    AFNDIndiceEstadoInicial(afnd);
+    return NULL;
+}
+
+bool matrix()
+{
+    int rows, columns;
+    for (i = 0; i < rows; i++){
+      for (j = 0; j < columns; j++){
+
+      }
+    }
+    return NULL;
+}
+
+
