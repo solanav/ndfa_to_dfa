@@ -5,6 +5,7 @@
 #include "../include/afnd.h"
 #include "../include/transforma.h"
 #include "../include/lambda_parser.h"
+#include "../include/types.h"
 
 int main(int argc, char **argv)
 {
@@ -40,8 +41,8 @@ int main(int argc, char **argv)
 	afd = AFNDTransforma(p_afnd);
 	if (afd == NULL)
 	{
-		printf("[ERROR] AFNDTransforma returned NULL\n");
-		return -1;
+		printf(P_ERROR"AFNDTransforma returned NULL\n");
+		return ERROR;
 	}
 
 	AFNDImprime(stdout, afd);
@@ -50,5 +51,5 @@ int main(int argc, char **argv)
 	AFNDElimina(afd);
 	AFNDElimina(p_afnd);
 
-	return 0;
+	return OK;
 }

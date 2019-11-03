@@ -3,6 +3,7 @@
 #include "../include/afnd.h"
 #include "../include/transforma.h"
 #include "../include/lambda_parser.h"
+#include "../include/types.h"
 
 // Creates a deterministic automata template based on a non-deterministic one
 AFND *clone_tranform(AFND *afnd)
@@ -21,9 +22,9 @@ AFND *AFNDTransforma(AFND *afnd)
     AFND *afd = clone_tranform(afnd);
 
     // Eliminate all lambdas
-	if (lambda_parse_afnd(afnd, afd) == -1)
+	if (lambda_parse_afnd(afnd, afd) == ERROR)
 	{
-		printf("[ERROR] Lambda parser returned error\n");
+		printf(P_ERROR"Lambda parser returned error\n");
 		return NULL;
 	}
 
