@@ -21,7 +21,11 @@ char *AFNDSimboloEn(AFND *p_afnd, int pos);
 
 AFND *AFNDInsertaSimbolo(AFND *p_afnd, char *simbolo);
 AFND *AFNDInsertaEstado(AFND *p_afnd, char *nombre, int tipo);
+/*Inserta en la función de transición guardada en el autómata
+ proporcionado como primerargumento una nueva transición*/
 AFND *AFNDInsertaTransicion(AFND *p_afnd, char *nombre_estado_i, char *nombre_simbolo_entrada, char *nombre_estado_f);
+/*Inserta en el AFND una transición lambda entre los dos 
+estados cuyo nombre seproporciona.*/
 AFND *AFNDInsertaLTransicion(AFND *p_afnd, char *nombre_estado_i, char *nombre_estado_f);
 
 AFND *AFNDInsertaLetra(AFND *p_afnd, char *letra);

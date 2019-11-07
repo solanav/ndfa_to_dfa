@@ -27,6 +27,28 @@ int get_transitions(AFND *afnd, int **transitions, int state_index);
 bool contains_lambda(AFND *afnd, int state_index);
 
 /**
+ * Generates a list of symbols
+ * 
+ * afnd: afnd to get the transitions from
+ * symbols: list to the symbols (memory is allocated inside)
+ * 
+ * Returns the total symbols of the automata in a list
+ */
+int get_symbols(AFND *afnd, char **symbols);
+
+/**
+ * Generates a list of accesible transitions with lambda
+ * 
+ * afnd: afnd to get the transitions from
+ * transitions: list to the transitions (memory is allocated inside)
+ * num_states: total number of states of the automata
+ * state_index: index of the state you want the transitions from
+ * 
+ * Returns the number of transitions in the given state
+ */
+int get_transitionsLambda(AFND *afnd, int **transitions, int state_index);
+
+/**
  * Generates a list of accesible states with lambda
  * 
  * afnd: afnd to get the states
@@ -34,7 +56,7 @@ bool contains_lambda(AFND *afnd, int state_index);
  * 
  * Returns a list of states that are reached with Lambda
  */
-int * get_statesLambda(AFND *afnd, int state_index);
+int get_statesLambda(AFND *afnd, int state_index);
 
 /**
  * Generates an array of states (current status + status reached by "lambda")
@@ -43,7 +65,7 @@ int * get_statesLambda(AFND *afnd, int state_index);
  * 
  * Returns an array with states
  */
-int * actualStates(AFND *afnd);
+int actualStates(AFND *afnd, int **transitions);
 
 /**
  * Generates a matrix with the states (y) symbols (x) and transitions
@@ -53,7 +75,7 @@ int * actualStates(AFND *afnd);
  * 
  * Returns true if done correctly and false if not
  */
-bool matrix(int *states, int symbols, int * transitions);
+bool matrix(AFND *afnd, int *states, int * transitions);
 
 /**
  * Create the AD by extracting the data from the matrix
@@ -64,5 +86,7 @@ bool matrix(int *states, int symbols, int * transitions);
  * Returns the new AD
  */
 AFND *AFD(char *name, int **matrix);
+
+
 
 #endif
