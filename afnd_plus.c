@@ -8,47 +8,56 @@
 
 
 
-/*Funcion que dado un stado y un simbolo me devuelve una lista de los estados donde va*/
+// Function that given a state and a symbol returns a list of the states where it goes
 
-int get_transitions(AFND *afnd, int **transitions, int state_index, int symbol)
+int * get_transitions(AFND *afnd, int state_index, int symbol)
 {
-    int total_transitions = 0;
-    // Initialize list
+    int transition_i = 0; 
     int num_states = AFNDNumEstados(afnd);
-    // Get enough memory for all possible transitions
-    *transitions = calloc(num_states, sizeof(int));
-
-    for(i=0; i<num_states; i++)
-    {
-        if(AFNDTransicionIndicesEstadoiSimboloEstadof(afnd, state_index, symbol, i) == 0){
-            printf("No hay transicion entre el estado %d  y  %d\n",state_index, i);
-        }
-        else if(AFNDCierreLTransicionIJ(AFND *p_afnd, int i, int j) == 0){
-            printf("No hay transicion LAMBDA entre el estado %d  y  %d\n",state_index, i);
-        }else{
-        //Push states at list
-         (*transitions)[transition_i] = i;
-            transition_i++;
-            total_transitions++;
-
-
-    // Reduce the transition list to only what we need
-    *transitions = realloc(*transitions, sizeof(int) * total_transitions);
-
-        }
-    }
+    int *list = NULL;
+    list = (int*)malloc(sizeof(int)*num_states);
    
-    return total_transitions;
-
+    for(int i=0; i<num_states; i++)
+    {
+        if(AFNDTransicionIndicesEstadoiSimboloEstadof(afnd, state_index, symbol, i) == 0)
+        {
+            list[transition_i] = 0;
+            
+            if(AFNDCierreLTransicionIJ(afnd, state_index, i) == 1  && state_index != i)
+            {
+                list[transition_i] = 2; 
+            }
+            transition_i++;
+        }else{
+       
+            list[transition_i] = 1;
+            transition_i++;
+        }    
+    } 
+    return list;
 }
 
-/*Funcion que llama a la anterior x veces para mirar el array de estados en vez de 1*/
+// Calls the previous x times to look at the array of states instead of 1
 
-int get_transitions_for_x_states(AFND *afnd, int **transitions, int * states, int symbol)
+int * get_transitions_for_x_states(AFND *afnd, int * states,  int symbol)
 {
-
-    for(i=0; i<; i++){
-        get_transitions(afnd, int **transitions, i, symbol);
+    int num_states = AFNDNumEstados(afnd);
+    int *listOflist = NULL;
+    int i;
+    for(i = 0; i < num_states; i++)
+    {
+       int *list = get_transitions(afnd, states[i], 1);
+        printf("El estado %d\n", i);
+        printf("%d\n",list[i] );
+        if(list[i] == 1)
+        {
+            printf("Tiene conexion con el estado q%d mediante ese simbolo\n", i);
+        }
+        if(list[i] == 2)
+        {
+            printf("Tiene conexion con el estado q%d mediante LAMBDA\n", i);
+        }
+        listOflist[i] = list; 
     }
-  
+    return listOflist;
 }
