@@ -40,14 +40,12 @@ int main(int argc, char **argv)
 	AFNDImprime(stdout, p_afnd);
 
 	transition *t_list = NULL;
-	int t = get_transitions(p_afnd, &t_list, 0);
+	int states[] = {0, 1};
+	int n = get_transitions_x(p_afnd, &t_list, states, 2);
 
-	for (int i = 0; i < t; i++) {
-		printf("Out > %s -> %d\n", AFNDSimboloEn(p_afnd, t_list[i].symbol), t_list[i].destiny);
-	}
+	printf("Transiciones totales:%d\n", n);
 
-	printf("Transiciones totales:%d\n", t);
-
+	free(t_list);
 	AFNDElimina(p_afnd);
 
 	return OK;

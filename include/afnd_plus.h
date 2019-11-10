@@ -34,7 +34,7 @@ int get_transitions(AFND *afnd, transition **t_list, int state);
  * Returns the number of transitions in the given state
  */
 
-int *get_transitions_for_x_states(AFND *afnd, int *states, int symbol);
+int get_transitions_x(AFND *afnd, transition **t_list, int *states, int num_states);
 
 /**
  * Create the AD by extracting the data from the matrix
