@@ -21,7 +21,7 @@ rm:
 	rm -rf $(BIN)
 
 # MAIN EXECUTABLE
-$(EXEC_NAME): main.o transforma.o afnd.o afnd_plus.o lambda_parser.o
+$(EXEC_NAME): main.o transforma.o afnd.o afnd_plus.o
 	$(CC) -o $@ $(BIN)main.o $(BIN)transforma.o $(BIN)afnd.o $(BIN)afnd_plus.o $(BIN)lambda_parser.o $(CFLAGS)
 
 # OBJECTS
@@ -35,9 +35,6 @@ afnd_plus.o: $(SRC)afnd_plus.c
 	$(CC) -c -o $(BIN)$@ $< $(CFLAGS)
 
 transforma.o: $(SRC)transforma.c
-	$(CC) -c -o $(BIN)$@ $< $(CFLAGS)
-
-lambda_parser.o: $(SRC)lambda_parser.c
 	$(CC) -c -o $(BIN)$@ $< $(CFLAGS)
 
 # UTILS
