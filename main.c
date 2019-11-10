@@ -42,25 +42,43 @@ int main(int argc, char **argv)
 
 	AFNDImprime(stdout, p_afnd);
 
+
+
+
 	int i, j;
 	int num_states = AFNDNumEstados(p_afnd);
 	int num_simbols = AFNDNumSimbolos(p_afnd);
- 	
-
- 	int **list = (int**) malloc(num_states * sizeof(int*));
- 	for(i = 0; i < num_states; i++){
-  		list[i] = (int*)malloc(num_simbols * sizeof(int));
+ 	int *v = (int*)malloc(num_states * sizeof(int));
+ 	int t = get_transitions(p_afnd,v, 1);
+ 	printf("Main\n");
+ 	for(i=0; i<=t; i++){
+ 		printf("%d\n", v[i]);
  	}
- 	int t = get_transitions(p_afnd,list);
     printf("Transiciones totales:%d\n",t );
-    for(i=0; i<num_states; i++){
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*for(i=0; i<num_states; i++){
 		for (j=0; j< num_simbols; j++){
 			printf("|%d|",list[i][j] );
 		}
 		printf("\n");
 	}
 
-
+*/
 	
 	/*afd = AFNDTransforma(p_afnd);
 	if (afd == NULL)

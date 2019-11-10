@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 #include "../include/afnd.h"
-
+void display(int* ageArray, AFND *afnd);
 /**
  * Generate a list of transitions for a state
  * 
@@ -14,7 +14,7 @@
  * 
  * Returns the number of transitions in the given state
  */
-int get_transitions(AFND *afnd, int **list);
+int get_transitions(AFND *afnd, int *vector, int state);
 
 /**
  * Generate a list of transitions for several states
