@@ -14,7 +14,7 @@
  * 
  * Returns the number of transitions in the given state
  */
-int *get_transitions(AFND *afnd, int state_index, int symbol);
+int get_transitions(AFND *afnd, int **list);
 
 /**
  * Generate a list of transitions for several states
@@ -39,6 +39,6 @@ int* get_transitions_for_x_states(AFND *afnd, int * states, int symbol);
  */
 AFND *AFD(char *name, int **matrix);
 
-
+void imprime_funcion_transicion(FILE *fd, AFND *p_afnd);
 
 #endif
