@@ -71,3 +71,25 @@ int get_transitions_x(AFND *afnd, transition **t_list, int *states, int num_stat
 
 	return transitions;
 }
+
+transition *compress_transitions(AFND *afnd, transition *t_list, int nt)
+{
+    return 0;
+}
+
+char *gen_name(AFND *afnd, int *states, int num_states)
+{
+    char *name = calloc(num_states * 3, sizeof(char));
+
+    for (int i = 0; i < num_states; i++)
+    {
+        char tmp[4];
+        sprintf(tmp, "q%c-", states[i] + 48);
+        strncat(name, tmp, 3);
+    }
+
+    // Remove last dash
+    name[num_states * 3 - 1] = '\0';
+
+    return name;
+}

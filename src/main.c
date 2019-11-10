@@ -3,14 +3,14 @@
 #include <string.h>
 
 #include "../include/afnd.h"
-#include "../include/afnd_plus.h"
 #include "../include/transforma.h"
 #include "../include/types.h"
 
 int main(int argc, char **argv)
 {
+
 	AFND *p_afnd;
-	//AFND *afd;
+	AFND *afd;
 
 	p_afnd = AFNDNuevo("af11", 6, 3);
 
@@ -39,13 +39,15 @@ int main(int argc, char **argv)
 
 	AFNDImprime(stdout, p_afnd);
 
-	transition *t_list = NULL;
-	int states[] = {0, 1};
-	int n = get_transitions_x(p_afnd, &t_list, states, 2);
+	afd = AFNDTransforma(p_afnd);
+	if (afd == NULL)
+	{
+		printf(P_ERROR"AFNDTransforma returned NULL\n");
+		return ERROR;
+	}
+	AFNDADot(afd);
 
-	printf("Transiciones totales:%d\n", n);
-
-	free(t_list);
+	AFNDElimina(afd);
 	AFNDElimina(p_afnd);
 
 	return OK;

@@ -37,6 +37,31 @@ int get_transitions(AFND *afnd, transition **t_list, int state);
 int get_transitions_x(AFND *afnd, transition **t_list, int *states, int num_states);
 
 /**
+ * Compress the list of transitions
+ * 
+ * Transforms a list of transitions of non-deterministic automata
+ * into a deterministic one by compressing transitions that use the
+ * same symbol
+ * 
+ * afnd: the afnd who's transitions we want compressed
+ * t_list: list of transitions
+ * nt: number of transitions in the list
+ * 
+ * Returns the new list of transitions
+ */
+transition *compress_transitions(AFND *afnd, transition *t_list, int nt);
+
+/**
+ * Generate a name for a new state
+ * 
+ * states: list of states to generate the name from
+ * num_states: number of states in the list
+ * 
+ * Returns a string containing the new name
+ */
+char *gen_name(AFND *afnd, int *states, int num_states);
+
+/**
  * Create the AD by extracting the data from the matrix
  * 
  * name: automata name
