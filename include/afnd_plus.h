@@ -4,8 +4,15 @@
 #include <stdbool.h>
 #include "../include/afnd.h"
 
+typedef struct _transition {
+    int symbol; // Indice del simbolo con el que nos moviemos
+    int destiny; // A donde nos movemos
+} transition;
+
+void display(int *ageArray, AFND *afnd);
+
 /**
- * Generates a list of transitions
+ * Generate a list of transitions for a state
  * 
  * afnd: afnd to get the transitions from
  * transitions: list to the transitions (memory is allocated inside)
@@ -14,30 +21,10 @@
  * 
  * Returns the number of transitions in the given state
  */
-int get_transitions(AFND *afnd, int **transitions, int state_index);
+int get_transitions(AFND *afnd, transition **t_list, int state);
 
 /**
- * Checks if the given state contains a lambda
- * 
- * afnd: afnd to check
- * state_index: index of the state to check
- * 
- * Returns true if has a lambda and false if not or in case of error
- */
-bool contains_lambda(AFND *afnd, int state_index);
-
-/**
- * Generates a list of symbols
- * 
- * afnd: afnd to get the transitions from
- * symbols: list to the symbols (memory is allocated inside)
- * 
- * Returns the total symbols of the automata in a list
- */
-int get_symbols(AFND *afnd, char **symbols);
-
-/**
- * Generates a list of accesible transitions with lambda
+ * Generate a list of transitions for several states
  * 
  * afnd: afnd to get the transitions from
  * transitions: list to the transitions (memory is allocated inside)
@@ -46,36 +33,8 @@ int get_symbols(AFND *afnd, char **symbols);
  * 
  * Returns the number of transitions in the given state
  */
-int get_transitionsLambda(AFND *afnd, int **transitions, int state_index);
 
-/**
- * Generates a list of accesible states with lambda
- * 
- * afnd: afnd to get the states
- * state_index: index of the initial state 
- * 
- * Returns a list of states that are reached with Lambda
- */
-int get_statesLambda(AFND *afnd, int state_index);
-
-/**
- * Generates an array of states (current status + status reached by "lambda")
- * 
- * afnd: afnd to get the transitions from
- * 
- * Returns an array with states
- */
-int actualStates(AFND *afnd, int **transitions);
-
-/**
- * Generates a matrix with the states (y) symbols (x) and transitions
- * 
- * afnd: afnd to check
- * state_index: index of the state to check
- * 
- * Returns true if done correctly and false if not
- */
-bool matrix(AFND *afnd, int *states, int * transitions);
+int *get_transitions_for_x_states(AFND *afnd, int *states, int symbol);
 
 /**
  * Create the AD by extracting the data from the matrix
@@ -87,6 +46,6 @@ bool matrix(AFND *afnd, int *states, int * transitions);
  */
 AFND *AFD(char *name, int **matrix);
 
-
+void imprime_funcion_transicion(FILE *fd, AFND *p_afnd);
 
 #endif
