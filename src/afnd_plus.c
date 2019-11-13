@@ -72,8 +72,38 @@ int get_transitions_x(AFND *afnd, transition **t_list, int *states, int num_stat
 	return transitions;
 }
 
+// Convert a list of non-determinictic to deterministic
 transition *compress_transitions(AFND *afnd, transition *t_list, int nt)
 {
+	//nt is the number of transitions that is equal to the size of the list
+	int transitions=0;
+	int num_symbols = AFNDNumSimbolos(afnd);
+	transition *t_new_list = calloc(num_symbols, sizeof(transition));
+
+	for(int i = 0; i < nt; i++)
+	{	// qi (Initial state)
+		(*t_new_list)[i].destiny = (*t_list)[i].destiny; 
+		(*t_new_list)[i].symbol = (*t_list)[i].symbol; 
+
+		for(int j = 0; j < nt; j++)
+		{	// qj (Next states with we will compare qi)
+			(*t_new_list)[j].destiny = (*t_list)[j].destiny; 
+			(*t_new_list)[j].symbol = (*t_list)[j].symbol; 
+			//Lambda transitions
+
+
+			//Search for what transitions have qi different from qi,
+			// or qi different from the elements that are in the new list
+			if( (*t_list)[i].destiny != *t_list){
+
+			}
+
+			if((*t_new_list)[j].destiny != (*t_list)[i].destiny){
+
+			}
+
+		}
+	}
     return 0;
 }
 
