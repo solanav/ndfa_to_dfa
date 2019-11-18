@@ -85,18 +85,40 @@ int get_transitions_x(AFND *afnd, int **t_list, const int *states, int num_state
 char *gen_name(AFND *afnd, int *states, int num_states)
 {
 	char *name = calloc(num_states * 3, sizeof(char));
+	int *sorted_states = calloc(num_states, sizeof(int));
 
+	// Copy states to tmp array
+	memcpy(sorted_states, states, num_states * sizeof(int));
+
+	// Sort the states
 	for (int i = 0; i < num_states; i++)
 	{
+		for (int j = 0; j < num_states; j++)
+		{
+			if (sorted_states[j] > sorted_states[i])
+			{
+				// Swap both
+				int tmp = sorted_states[i];
+				sorted_states[i] = sorted_states[j];
+				sorted_states[j] = tmp;
+				
+				break;
+			}		
+		}	
+	}
 
-			// Insert the name
+	// Create the name
+	for (int i = 0; i < num_states; i++)
+	{
 			char tmp[4];
-			sprintf(tmp, "q%c-", states[i] + 48);
+			sprintf(tmp, "q%c-", sorted_states[i] + 48);
 			strncat(name, tmp, 3);
 	}
 
 	// Remove last dash
 	name[num_states * 3 - 1] = '\0';
+
+	free(sorted_states);
 
 	return name;
 }
