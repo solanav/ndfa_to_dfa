@@ -6,6 +6,7 @@
 
 #define P_ERROR "[ERROR] "
 #define P_INFO  "[INFO ] "
-#define P_WARN  "[WARN ] "
+#define P_TRANS  "[TRANS] "
+#define P_STATE  "[STATE] "
 
 #endif

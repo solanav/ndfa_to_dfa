@@ -17,7 +17,7 @@ typedef struct _state
 #ifdef DEBUG
 void print_state(const state *s)
 {
-    char type_str[16];
+    char type_str[16] = {0};
 
     if (s->type == 0)
         strcpy(type_str, "inicial");
@@ -27,11 +27,19 @@ void print_state(const state *s)
         strcpy(type_str, "inicial y final");
     else if (s->type == 3)
         strcpy(type_str, "normal");
+    else
+        strcpy(type_str, "      ");
     
-    printf(P_INFO "\"%8s\", %7s, [", s->name, type_str);
-    for (int i = 0; i < s->i_n; i++)
-        printf("%d, ", s->i_list[i]);
-    printf("]\n");
+    if (s->name != NULL)
+    {
+        printf(P_INFO "\"%8s\", %7s, [", s->name, type_str);
+
+        for (int i = 0; i < s->i_n; i++)
+            printf("%d, ", s->i_list[i]);
+        printf("]\n");
+    }
+    else
+        printf(P_INFO "          , %7s, [ ]\n", type_str);
 }
 #endif
 
@@ -77,6 +85,7 @@ AFND *AFNDTransforma(AFND *afnd)
     save_state(afnd, f_states, f_states_n, initial_list, initial_list_n);
 #ifdef DEBUG
     print_state(&f_states[f_states_n]);
+    printf("\n");
 #endif
     f_states_n++;
 
@@ -95,8 +104,14 @@ AFND *AFNDTransforma(AFND *afnd)
                 f_states[current_state].i_n,
                 i
             );
+
             if (t_list_n == 0)
+            {
+                f_transitions = realloc(f_transitions, (f_transitions_n + 1) * sizeof(state));
+                f_transitions[f_transitions_n].type = -1;
+                f_transitions_n++;
                 continue;
+            }
 
             char *transition_name = gen_name(afnd, t_list, t_list_n);
 
@@ -104,6 +119,11 @@ AFND *AFNDTransforma(AFND *afnd)
             f_transitions = realloc(f_transitions, (f_transitions_n + 1) * sizeof(state));
             save_state(afnd, f_transitions, f_transitions_n, t_list, t_list_n);
             f_transitions_n++;
+#ifdef DEBUG
+            printf(P_INFO "Inserted transition (%s):\n", AFNDSimboloEn(afnd, i));
+            print_state(&f_transitions[f_transitions_n-1]);
+            printf("\n");
+#endif
 
             // Insert into the states array
             if (contains(f_states, f_states_n, transition_name) == false)
@@ -138,16 +158,22 @@ AFND *AFNDTransforma(AFND *afnd)
 
     // Free everything
     for (int i = 0; i < f_states_n; i++)
-    {   
-        free(f_states[i].name);
-        free(f_states[i].i_list);
+    {
+        if (f_states[i].type != -1)
+        {
+            free(f_states[i].name);
+            free(f_states[i].i_list);
+        }
     }
     free(f_states);
 
     for (int i = 0; i < f_transitions_n; i++)
     {   
-        free(f_transitions[i].name);
-        free(f_transitions[i].i_list);
+        if (f_transitions[i].type != -1)
+        {
+            free(f_transitions[i].name);
+            free(f_transitions[i].i_list);
+        }
     }
     free(f_transitions);
 
