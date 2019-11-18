@@ -122,3 +122,23 @@ char *gen_name(AFND *afnd, int *states, int num_states)
 
 	return name;
 }
+
+int get_states_connected(AFND *afnd, int **states, int state)
+{
+	int total_states = AFNDNumEstados(afnd);
+	*states = calloc(total_states, sizeof(int));
+
+	int num_states = 0;
+	for (int i = 0; i < total_states; i++)
+	{
+		if (AFNDCierreLTransicionIJ(afnd, state, i) == 1)
+		{
+			(*states)[num_states] = i;
+			num_states++;
+		}
+	}
+
+	*states = realloc(*states, num_states * sizeof(int));
+
+	return num_states;
+}

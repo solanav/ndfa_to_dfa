@@ -50,6 +50,16 @@ char *gen_name(AFND *afnd, int *states, int num_states);
  */
 AFND *AFD(char *name, int **matrix);
 
+/**
+ * Given an state, returns a list of states connected by lambda
+ * 
+ * states: array where the states will be saved (memory allocated inside)
+ * state: objective of the operation
+ * 
+ * Returns the number of states in the states array
+ */
+int get_states_connected(AFND *afnd, int **states, int state);
+
 void imprime_funcion_transicion(FILE *fd, AFND *p_afnd);
 
 #endif

@@ -28,22 +28,25 @@ AFND *AFNDTransforma(AFND *afnd)
     AFNDInsertaEstado(afd, name, INICIAL);
     free(name);
 
-    int state_list[] = {0, 2, 1};
-    char *test_name = gen_name(afnd, state_list, 3);
-    printf("NAME > %s\n", test_name);
+    int *states = NULL;
+    int n = get_states_connected(afnd, &states, 0);
 
-    /* Get transitions from initial state
+    for (int i = 0; i < n; i++)
+        printf("LAMBDA FROM 0 TO %d\n", states[i]);
+
+    /*
+    // Get transitions from initial state
     int *t_list = NULL;
     int nt = get_transitions(afnd, &t_list, initial_s, 0);
 
-    // Get transitions from multiple states
+     Get transitions from multiple states
     int states[] = {0, 1, 2};
-    int nt = get_transitions_x(afnd, &t_list, states, 3, 1);
+    nt = get_transitions_x(afnd, &t_list, states, 3, 1);
     for (int i = 0; i < nt; i++)
         printf("> Found %d\n", t_list[i]);
-    */
+    
     // Add transitions of the first state to afd
-    //AFNDInsertaTransicion(afnd, initial_s, );
+    //AFNDInsertaTransicion(afnd, initial_s, );*/
 
     //free(t_list);
     AFNDElimina(afd);
