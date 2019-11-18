@@ -144,17 +144,21 @@ int get_states_connected(AFND *afnd, int **states, int state)
 
 int gen_type(AFND *afnd, int *states, int state_n)
 {
+	static int initial = 0;
 	int type = NORMAL;
 
 	for (int i = 0; i < state_n; i++)
 	{
 		int tmp_type = AFNDTipoEstadoEn(afnd, states[i]);
 
-		if (type == NORMAL)
-			type = tmp_type;
-		
-		else if (tmp_type == INICIAL && type == FINAL)
-			return INICIAL_Y_FINAL;
+		if (tmp_type == INICIAL && initial == 0)
+		{
+			type = INICIAL;
+			initial++;
+		}
+
+		else if (tmp_type == FINAL && type == NORMAL)
+			type = FINAL;
 
 		else if (tmp_type == FINAL && type == INICIAL)
 			return INICIAL_Y_FINAL;

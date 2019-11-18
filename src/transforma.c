@@ -17,7 +17,18 @@ typedef struct _state
 #ifdef DEBUG
 void print_state(const state *s)
 {
-    printf(P_INFO "Name: \"%8s\", type: %d, indexes: [", s->name, s->type);
+    char type_str[16];
+
+    if (s->type == 0)
+        strcpy(type_str, "inicial");
+    else if (s->type == 1)
+        strcpy(type_str, "final");
+    else if (s->type == 2)
+        strcpy(type_str, "inicial y final");
+    else if (s->type == 3)
+        strcpy(type_str, "normal");
+    
+    printf(P_INFO "\"%8s\", %7s, [", s->name, type_str);
     for (int i = 0; i < s->i_n; i++)
         printf("%d, ", s->i_list[i]);
     printf("]\n");
