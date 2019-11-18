@@ -78,17 +78,21 @@ AFND *AFNDTransforma(AFND *afnd)
         printf(P_INFO "New state found \"%s\"\n", tmp_name);
 #endif
         free(t_list);
+        free(tmp_name);
     }
-
-    free(initial_list);
-    free(f_states);
-    free(f_transitions);
-    free(name);
 
 #ifdef DEBUG
     for (int i = 0; i < f_transitions_n; i++)
-        printf("[%s][%d]\n", f_transitions[i].name, f_transitions[i].type);
+        printf(P_INFO"[%10s][%d]\n", f_transitions[i].name, f_transitions[i].type);
 #endif
+
+    // Free everything
+    free(initial_list);
+    free(f_states);
+    for (int i = 0; i < f_transitions_n; i++)
+        free(f_transitions[i].name);
+    free(f_transitions);
+    free(name);
 
     return NULL;
 }
