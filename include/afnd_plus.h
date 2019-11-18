@@ -60,6 +60,16 @@ AFND *AFD(char *name, int **matrix);
  */
 int get_states_connected(AFND *afnd, int **states, int state);
 
+/**
+ * Given a list of states it returns the type of the group
+ * 
+ * states: list of states to check
+ * state_n: number of the states
+ * 
+ * Returns: the type of the state as defined in afnd.h
+ */
+int get_type(AFND *afnd, int *states, int state_n);
+
 void imprime_funcion_transicion(FILE *fd, AFND *p_afnd);
 
 #endif

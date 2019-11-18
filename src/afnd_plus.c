@@ -7,8 +7,6 @@
 #include "../include/afnd.h"
 #include "../include/afnd_plus.h"
 
-// Function that given a state and a symbol returns a list of the states where it goes
-
 int get_transitions(AFND *afnd, int **t_list, int state, int symbol_i)
 {
 	int transitions = 0; // Count the number of transitions
@@ -34,7 +32,6 @@ int get_transitions(AFND *afnd, int **t_list, int state, int symbol_i)
 	return transitions;
 }
 
-// Calls the previous x times to look at the array of states instead of 1
 int get_transitions_x(AFND *afnd, int **t_list, const int *states, int num_states, int symbol_i)
 {
 	int transitions = 0; // Total number of transitions
@@ -130,4 +127,30 @@ int get_states_connected(AFND *afnd, int **states, int state)
 	*states = realloc(*states, num_states * sizeof(int));
 
 	return num_states;
+}
+
+int get_states_connected_x(AFND *afnd, int **states, int **o_states, int o_states_n)
+{
+	
+}
+
+int get_type(AFND *afnd, int *states, int state_n)
+{
+	int type = NORMAL;
+
+	for (int i = 0; i < state_n; i++)
+	{
+		int tmp_type = AFNDTipoEstadoEn(afnd, states[i]);
+
+		if (type == NORMAL)
+			type = tmp_type;
+		
+		else if (tmp_type == INICIAL && type == FINAL)
+			return INICIAL_Y_FINAL;
+
+		else if (tmp_type == FINAL && type == INICIAL)
+			return INICIAL_Y_FINAL;
+	}
+
+	return type;
 }
