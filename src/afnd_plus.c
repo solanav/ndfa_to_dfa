@@ -6,6 +6,7 @@
 
 #include "../include/afnd.h"
 #include "../include/afnd_plus.h"
+#include "../include/types.h"
 
 int get_transitions(AFND *afnd, int **t_list, int state, int symbol_i)
 {
@@ -45,8 +46,12 @@ int get_transitions_x(AFND *afnd, int **t_list, const int *states, int num_state
 	for (int i = 0; i < num_states; i++)
 	{
 		int *tmp_t_list;
-		int num_transitions =
-			get_transitions(afnd, &tmp_t_list, states[i], symbol_i);
+		int num_transitions = get_transitions(
+			afnd,
+			&tmp_t_list,
+			states[i],
+			symbol_i
+		);
 
 		// For each transition
 		for (int j = 0; j < num_transitions; j++)
@@ -74,6 +79,14 @@ int get_transitions_x(AFND *afnd, int **t_list, const int *states, int num_state
 
 char *gen_name(AFND *afnd, int *states, int num_states)
 {
+	if (num_states == 0)
+	{
+#ifdef DEBUG
+		printf(P_ERROR"Input error [%s]\n", __func__);
+#endif
+		exit(EXIT_FAILURE);
+	}
+
 	char *name = calloc(num_states * 3 + 1, sizeof(char));
 	int *sorted_states = calloc(num_states, sizeof(int));
 
@@ -129,12 +142,7 @@ int get_states_connected(AFND *afnd, int **states, int state)
 	return num_states;
 }
 
-int get_states_connected_x(AFND *afnd, int **states, int **o_states, int o_states_n)
-{
-	
-}
-
-int get_type(AFND *afnd, int *states, int state_n)
+int gen_type(AFND *afnd, int *states, int state_n)
 {
 	int type = NORMAL;
 

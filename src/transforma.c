@@ -8,9 +8,29 @@
 
 typedef struct _state
 {
-    char *name;
-    int type;
+    char *name;     // Name of the state
+    int type;       // Type of the state
+    int *i_list;    // Index of the states contained in the original afnd
+    int i_n;        // Size of i_list
 } state;
+
+#ifdef DEBUG
+void print_state(const state *s)
+{
+    printf(P_INFO "Name: \"%8s\", type: %d, indexes: [", s->name, s->type);
+    for (int i = 0; i < s->i_n; i++)
+        printf("%d, ", s->i_list[i]);
+    printf("]\n");
+}
+#endif
+
+#define save_state(afnd, sl, i, il, iln) {\
+    sl[i].name = gen_name(afnd, il, iln);\
+    sl[i].type = gen_type(afnd, il, iln);\
+    sl[i].i_list = calloc(iln, sizeof(int));\
+    memcpy(sl[i].i_list, il, iln * sizeof(int));\
+    sl[i].i_n = iln;\
+}
 
 bool contains(state *transitions, int transitions_n, char *state_name)
 {
@@ -43,74 +63,81 @@ AFND *AFNDTransforma(AFND *afnd)
 #endif
 
     // Insert the initial state to have something inside the list
-    char *initial_name = gen_name(afnd, initial_list, initial_list_n);
-    f_states[f_states_n].name = calloc(strlen(initial_name) + 1, sizeof(char));
-    f_states[f_states_n].type = get_type(afnd, initial_list, initial_list_n);
-    f_states_n++;
+    save_state(afnd, f_states, f_states_n, initial_list, initial_list_n);
 #ifdef DEBUG
-    printf(P_INFO "Initial state is called \"%s\" and has type %d\n", initial_name, get_type(afnd, initial_list, initial_list_n));
+    print_state(&f_states[f_states_n]);
 #endif
-    free(initial_name);
+    f_states_n++;
 
     // Main loop
-    int *state_list = initial_list;
-    int state_list_n = initial_list_n;
     for (int current_state = 0; current_state < f_states_n; current_state++)
     {
-        char *state_name = gen_name(afnd, state_list, state_list_n);
-#ifdef DEBUG
-        printf(P_INFO "Checking transitions of %s\n", state_name);
-#endif
-
         // Get all transitions and insert if new
         for (int i = 0; i < AFNDNumSimbolos(afnd); i++)
         {
-            // Get transitions of the state
+            // Get transition data
             int *t_list = NULL;
-            int t_list_n = get_transitions_x(afnd, &t_list, state_list, state_list_n, i);
+            int t_list_n = get_transitions_x(
+                afnd,
+                &t_list,
+                f_states[current_state].i_list,
+                f_states[current_state].i_n,
+                i
+            );
+            if (t_list_n == 0)
+                continue;
+
             char *transition_name = gen_name(afnd, t_list, t_list_n);
 
-            // If we don't know this state, insert it
+            // Insert into the transition array
+            f_transitions = realloc(f_transitions, (f_transitions_n + 1) * sizeof(state));
+            save_state(afnd, f_transitions, f_transitions_n, t_list, t_list_n);
+            f_transitions_n++;
+
+            // Insert into the states array
             if (contains(f_states, f_states_n, transition_name) == false)
             {
-                // Insert into our list of states
-                f_states[f_states_n].name = calloc(strlen(transition_name) + 1, sizeof(char));
-                strcpy(f_states[f_states_n].name, transition_name);
-                f_states[f_states_n].type = get_type(afnd, t_list, t_list_n);
-
-                // Get more space for transitions
                 f_states = realloc(f_states, (f_states_n + 1) * sizeof(state));
-                
+                save_state(afnd, f_states, f_states_n, t_list, t_list_n);
                 f_states_n++;
             }
 
-#ifdef DEBUG
-            printf(P_INFO "Transition to \"%s\" with \"%s\": [", transition_name, AFNDSimboloEn(afnd, i));
-            for (int j = 0; j < t_list_n; j++)
-                printf("%d, ", t_list[j]);
-            printf("]\n");
-            printf(P_INFO "New state found \"%s\"\n", transition_name);
-#endif
             free(t_list);
             free(transition_name);
         }
-
-#ifdef DEBUG
-        for (int i = 0; i < f_states_n; i++)
-            printf(P_INFO "[%10s][%d]\n", f_states[i].name, f_states[i].type);
-#endif
-        // Free the current state list
-        free(state_list);
-        free(state_name);
-        break;
     }
+
+    // Print what we got
+#ifdef DEBUG
+    printf("\n"P_INFO"All the states:\n");
+    for (int i = 0; i < f_states_n; i++)
+    {
+        printf("\t");
+        print_state(&f_states[i]);
+    }
+
+    printf("\n"P_INFO"All the transitions:\n");
+    for (int i = 0; i < f_transitions_n; i++)
+    {
+        printf("\t");
+        print_state(&f_transitions[i]);
+    }
+    printf("\n");
+#endif
 
     // Free everything
     for (int i = 0; i < f_states_n; i++)
+    {   
         free(f_states[i].name);
+        free(f_states[i].i_list);
+    }
     free(f_states);
+
     for (int i = 0; i < f_transitions_n; i++)
+    {   
         free(f_transitions[i].name);
+        free(f_transitions[i].i_list);
+    }
     free(f_transitions);
 
     return NULL;
