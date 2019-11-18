@@ -8,7 +8,7 @@ BIN=bin/
 
 # COMPILER
 CC=gcc
-CFLAGS=-g -Wall $(LIBS)
+CFLAGS=-g -Wall $(LIBS) -DDEBUG
 LIBS=-lm
 
 all: mk $(EXEC_NAME) rm

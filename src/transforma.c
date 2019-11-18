@@ -1,55 +1,94 @@
-#include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../include/afnd.h"
 #include "../include/afnd_plus.h"
 #include "../include/transforma.h"
 #include "../include/types.h"
 
-// Creates a deterministic automata template based on a non-deterministic one
-AFND *clone_tranform(AFND *afnd)
+typedef struct _state
 {
-    int num_states = AFNDNumEstados(afnd) * 2; // Power set is the max
-    int num_simbols = AFNDNumSimbolos(afnd); // Same as before
+    char *name;
+    int type;
+} state;
 
-    AFND *afd = AFNDNuevo("af11_determinista", num_states, num_simbols);
+bool contains(state *transitions, int transitions_n, char *state_name)
+{
+    for (int i = 0; i < transitions_n; i++)
+    {
+        if (strcmp(transitions[i].name, state_name) == 0)
+            return true;
+    }
 
-    return afd;
+    return false;
 }
 
 AFND *AFNDTransforma(AFND *afnd)
 {
-    // Create template for deterministic transformation
-    AFND *afd = clone_tranform(afnd);
+    // Temporal list of states of final automata
+    int f_states_n = 0;
+    int f_transitions_n = 0;
+    state *f_states = calloc(1, sizeof(state));
+    state *f_transitions = calloc(1, sizeof(state));
 
     // Get initial state and insert it
-    int initial_s = AFNDIndiceEstadoInicial(afnd);
-    char *name = gen_name(afnd, &initial_s, 1);
-    AFNDInsertaEstado(afd, name, INICIAL);
+    int *initial_list = NULL;
+    int initial_list_n = get_states_connected(
+        afnd,
+        &initial_list,
+        AFNDIndiceEstadoInicial(afnd));
+#ifdef DEBUG
+    printf(P_INFO "Initial state list: [");
+    for (int i = 0; i < initial_list_n; i++)
+        printf("%d, ", initial_list[i]);
+    printf("]\n");
+#endif
+
+    // Create name for the initial state
+    char *name = gen_name(afnd, initial_list, initial_list_n);
+#ifdef DEBUG
+    printf(P_INFO "Initial state is called: %s\n", name);
+#endif
+
+    // Get transitions from initial state
+    for (int i = 0; i < AFNDNumSimbolos(afnd); i++)
+    {
+        int *t_list = NULL;
+        int t_list_n = get_transitions_x(afnd, &t_list, initial_list, initial_list_n, i);
+        char *tmp_name = gen_name(afnd, t_list, t_list_n);
+
+        // Check if state already exists
+        if (contains(f_transitions, f_transitions_n, tmp_name) == false)
+        {
+            // Insert into our list of states
+            f_transitions[f_transitions_n].name = calloc(strlen(tmp_name) + 1, sizeof(char));
+            strcpy(f_transitions[f_transitions_n].name, tmp_name);
+            f_transitions[f_transitions_n].type = -1;
+            f_transitions_n++;
+
+            // Get more space for transitions
+            f_transitions = realloc(f_transitions, (f_transitions_n + 1) * sizeof(state));
+        }
+
+#ifdef DEBUG
+        printf(P_INFO "Transitions of \"%s\" with \"%s\": [", name, AFNDSimboloEn(afnd, i));
+        for (int j = 0; j < t_list_n; j++)
+            printf("%d, ", t_list[j]);
+        printf("]\n");
+        printf(P_INFO "New state found \"%s\"\n", tmp_name);
+#endif
+        free(t_list);
+    }
+
+    free(initial_list);
+    free(f_states);
+    free(f_transitions);
     free(name);
 
-    int *states = NULL;
-    int n = get_states_connected(afnd, &states, 0);
-
-    for (int i = 0; i < n; i++)
-        printf("LAMBDA FROM 0 TO %d\n", states[i]);
-
-    /*
-    // Get transitions from initial state
-    int *t_list = NULL;
-    int nt = get_transitions(afnd, &t_list, initial_s, 0);
-
-     Get transitions from multiple states
-    int states[] = {0, 1, 2};
-    nt = get_transitions_x(afnd, &t_list, states, 3, 1);
-    for (int i = 0; i < nt; i++)
-        printf("> Found %d\n", t_list[i]);
-    
-    // Add transitions of the first state to afd
-    //AFNDInsertaTransicion(afnd, initial_s, );*/
-
-    //free(t_list);
-    AFNDElimina(afd);
+#ifdef DEBUG
+    for (int i = 0; i < f_transitions_n; i++)
+        printf("[%s][%d]\n", f_transitions[i].name, f_transitions[i].type);
+#endif
 
     return NULL;
 }

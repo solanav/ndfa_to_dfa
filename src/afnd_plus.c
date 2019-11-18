@@ -24,18 +24,12 @@ int get_transitions(AFND *afnd, int **t_list, int state, int symbol_i)
 				afnd, state, symbol_i, i) == 1)
 		{
 			(*t_list)[transitions] = i;
-
 			transitions++;
-			printf("Found > from %d through %s to %d\n",
-				   state, AFNDSimboloEn(afnd, symbol_i),
-				   i);
 		}
 	}
 
 	// Realloc to get only the space we need
 	*t_list = realloc(*t_list, transitions * sizeof(int));
-
-	printf("Finished (total: %d)\n", transitions);
 
 	return transitions;
 }
@@ -47,7 +41,6 @@ int get_transitions_x(AFND *afnd, int **t_list, const int *states, int num_state
 	int num_symbols = AFNDNumSimbolos(afnd);
 
 	// Get memory for the max number of transitions we can have
-	printf("Total space > %ld bytes\n", num_symbols * num_states * sizeof(int));
 	*t_list = calloc(num_symbols * num_states, sizeof(int));
 	memset(*t_list, -1, num_symbols * num_states * sizeof(int));
 
@@ -58,12 +51,12 @@ int get_transitions_x(AFND *afnd, int **t_list, const int *states, int num_state
 		int num_transitions =
 			get_transitions(afnd, &tmp_t_list, states[i], symbol_i);
 
-		// Copy new transitions
+		// For each transition
 		for (int j = 0; j < num_transitions; j++)
 		{
 			// Check we are not repeating
 			int repeated = 0;
-			for (int k = 0; k < num_symbols * num_symbols && repeated == 0; k++)
+			for (int k = 0; k < num_symbols * num_states && repeated == 0; k++)
 				repeated = tmp_t_list[j] == (*t_list)[k] ? 1 : 0;
 
 			// If not repeated: insert, else don't
@@ -72,8 +65,8 @@ int get_transitions_x(AFND *afnd, int **t_list, const int *states, int num_state
 			else
 				num_transitions--;
 		}
-		free(tmp_t_list);
 
+		free(tmp_t_list);
 		transitions += num_transitions;
 	}
 
@@ -84,7 +77,7 @@ int get_transitions_x(AFND *afnd, int **t_list, const int *states, int num_state
 
 char *gen_name(AFND *afnd, int *states, int num_states)
 {
-	char *name = calloc(num_states * 3, sizeof(char));
+	char *name = calloc(num_states * 3 + 1, sizeof(char));
 	int *sorted_states = calloc(num_states, sizeof(int));
 
 	// Copy states to tmp array
@@ -109,11 +102,7 @@ char *gen_name(AFND *afnd, int *states, int num_states)
 
 	// Create the name
 	for (int i = 0; i < num_states; i++)
-	{
-			char tmp[4];
-			sprintf(tmp, "q%c-", sorted_states[i] + 48);
-			strncat(name, tmp, 3);
-	}
+		sprintf(name + i*3, "q%d-", sorted_states[i]);
 
 	// Remove last dash
 	name[num_states * 3 - 1] = '\0';

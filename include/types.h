@@ -5,5 +5,7 @@
 #define ERROR -1
 
 #define P_ERROR "[ERROR] "
+#define P_INFO  "[INFO ] "
+#define P_WARN  "[WARN ] "
 
 #endif
