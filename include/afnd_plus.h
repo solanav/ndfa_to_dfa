@@ -4,11 +4,6 @@
 #include <stdbool.h>
 #include "../include/afnd.h"
 
-typedef struct _transition {
-    int symbol; // Indice del simbolo con el que nos moviemos
-    int destiny; // A donde nos movemos
-} transition;
-
 void display(int *ageArray, AFND *afnd);
 
 /**
@@ -21,7 +16,7 @@ void display(int *ageArray, AFND *afnd);
  * 
  * Returns the number of transitions in the given state
  */
-int get_transitions(AFND *afnd, transition **t_list, int state);
+int get_transitions(AFND *afnd, int **t_list, int state, int symbol_i);
 
 /**
  * Generate a list of transitions for several states
@@ -33,23 +28,7 @@ int get_transitions(AFND *afnd, transition **t_list, int state);
  * 
  * Returns the number of transitions in the given state
  */
-
-int get_transitions_x(AFND *afnd, transition **t_list, int *states, int num_states);
-
-/**
- * Compress the list of transitions
- * 
- * Transforms a list of transitions of non-deterministic automata
- * into a deterministic one by compressing transitions that use the
- * same symbol
- * 
- * afnd: the afnd who's transitions we want compressed
- * t_list: list of transitions
- * nt: number of transitions in the list
- * 
- * Returns the new list of transitions
- */
-transition *compress_transitions(AFND *afnd, transition *t_list, int nt);
+int get_transitions_x(AFND *afnd, int **t_list, const int *states, int num_states, int symbol_i);
 
 /**
  * Generate a name for a new state

@@ -43,6 +43,7 @@ int main(int argc, char **argv)
 	if (afd == NULL)
 	{
 		printf(P_ERROR"AFNDTransforma returned NULL\n");
+		AFNDElimina(p_afnd);
 		return ERROR;
 	}
 	AFNDADot(afd);

@@ -2,124 +2,101 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "../include/afnd.h"
 #include "../include/afnd_plus.h"
 
 // Function that given a state and a symbol returns a list of the states where it goes
 
-int get_transitions(AFND *afnd, transition **t_list, int state)
+int get_transitions(AFND *afnd, int **t_list, int state, int symbol_i)
 {
-	int transitions = 0;
+	int transitions = 0; // Count the number of transitions
 	int num_states = AFNDNumEstados(afnd);
 	int num_symbols = AFNDNumSimbolos(afnd);
 
 	// Get memory for the max number of transitions we can have
-	*t_list = calloc(num_symbols, sizeof(transition));
+	*t_list = calloc(num_symbols, sizeof(int));
 
-	for (int next_state = 0; next_state < num_states; next_state++) {
-		for (int symbol = 0; symbol < num_symbols; symbol++) {
-			if (AFNDTransicionIndicesEstadoiSimboloEstadof(
-				    afnd, state, symbol, next_state) == 1) {
-				(*t_list)[transitions].destiny = next_state;
-				(*t_list)[transitions].symbol = symbol;
+	for (int i = 0; i < num_states; i++)
+	{
+		if (AFNDTransicionIndicesEstadoiSimboloEstadof(
+				afnd, state, symbol_i, i) == 1)
+		{
+			(*t_list)[transitions] = i;
 
-				transitions++;
-
-				printf("Found > from %d through %s to %d\n",
-				       state, AFNDSimboloEn(afnd, symbol),
-				       next_state);
-			}
+			transitions++;
+			printf("Found > from %d through %s to %d\n",
+				   state, AFNDSimboloEn(afnd, symbol_i),
+				   i);
 		}
 	}
 
 	// Realloc to get only the space we need
-	*t_list = realloc(*t_list, transitions * sizeof(transition));
+	*t_list = realloc(*t_list, transitions * sizeof(int));
 
-	printf("Finished\n");
+	printf("Finished (total: %d)\n", transitions);
 
 	return transitions;
 }
 
 // Calls the previous x times to look at the array of states instead of 1
-int get_transitions_x(AFND *afnd, transition **t_list, int *states, int num_states)
+int get_transitions_x(AFND *afnd, int **t_list, const int *states, int num_states, int symbol_i)
 {
 	int transitions = 0; // Total number of transitions
 	int num_symbols = AFNDNumSimbolos(afnd);
 
 	// Get memory for the max number of transitions we can have
-    printf("Total space > %ld bytes\n", num_symbols * num_states * sizeof(transition));
-	*t_list = calloc(num_symbols * num_states, sizeof(transition));
+	printf("Total space > %ld bytes\n", num_symbols * num_states * sizeof(int));
+	*t_list = calloc(num_symbols * num_states, sizeof(int));
+	memset(*t_list, -1, num_symbols * num_states * sizeof(int));
 
 	// For each state, get the transition list
-	for (int i = 0; i < num_states; i++) {
-		transition *tmp_t_list;
+	for (int i = 0; i < num_states; i++)
+	{
+		int *tmp_t_list;
 		int num_transitions =
-			get_transitions(afnd, &tmp_t_list, states[i]);
+			get_transitions(afnd, &tmp_t_list, states[i], symbol_i);
 
-        printf("Copying %ld bytes\n", num_transitions * sizeof(transition));
+		// Copy new transitions
+		for (int j = 0; j < num_transitions; j++)
+		{
+			// Check we are not repeating
+			int repeated = 0;
+			for (int k = 0; k < num_symbols * num_symbols && repeated == 0; k++)
+				repeated = tmp_t_list[j] == (*t_list)[k] ? 1 : 0;
 
-        for (int j = 0; j < num_transitions; j++)
-            (*t_list)[transitions + j] = tmp_t_list[j];
-
-        free(tmp_t_list);
+			// If not repeated: insert, else don't
+			if (repeated == 0)
+				(*t_list)[transitions + j] = tmp_t_list[j];
+			else
+				num_transitions--;
+		}
+		free(tmp_t_list);
 
 		transitions += num_transitions;
 	}
 
-    *t_list = realloc(*t_list, transitions * sizeof(transition));
+	*t_list = realloc(*t_list, transitions * sizeof(int));
 
 	return transitions;
 }
 
-// Convert a list of non-determinictic to deterministic
-transition *compress_transitions(AFND *afnd, transition *t_list, int nt)
-{
-	//nt is the number of transitions that is equal to the size of the list
-	int transitions=0;
-	int num_symbols = AFNDNumSimbolos(afnd);
-	transition *t_new_list = calloc(num_symbols, sizeof(transition));
-
-	for(int i = 0; i < nt; i++)
-	{	// qi (Initial state)
-		(*t_new_list)[i].destiny = (*t_list)[i].destiny; 
-		(*t_new_list)[i].symbol = (*t_list)[i].symbol; 
-
-		for(int j = 0; j < nt; j++)
-		{	// qj (Next states with we will compare qi)
-			(*t_new_list)[j].destiny = (*t_list)[j].destiny; 
-			(*t_new_list)[j].symbol = (*t_list)[j].symbol; 
-			//Lambda transitions
-
-
-			//Search for what transitions have qi different from qi,
-			// or qi different from the elements that are in the new list
-			if( (*t_list)[i].destiny != *t_list){
-
-			}
-
-			if((*t_new_list)[j].destiny != (*t_list)[i].destiny){
-
-			}
-
-		}
-	}
-    return 0;
-}
-
 char *gen_name(AFND *afnd, int *states, int num_states)
 {
-    char *name = calloc(num_states * 3, sizeof(char));
+	char *name = calloc(num_states * 3, sizeof(char));
 
-    for (int i = 0; i < num_states; i++)
-    {
-        char tmp[4];
-        sprintf(tmp, "q%c-", states[i] + 48);
-        strncat(name, tmp, 3);
-    }
+	for (int i = 0; i < num_states; i++)
+	{
 
-    // Remove last dash
-    name[num_states * 3 - 1] = '\0';
+			// Insert the name
+			char tmp[4];
+			sprintf(tmp, "q%c-", states[i] + 48);
+			strncat(name, tmp, 3);
+	}
 
-    return name;
+	// Remove last dash
+	name[num_states * 3 - 1] = '\0';
+
+	return name;
 }
