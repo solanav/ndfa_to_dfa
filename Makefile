@@ -42,7 +42,7 @@ valgrind:
 	valgrind --leak-check=full ./$(EXEC_NAME)
 
 dot:
-	for f in *.dot; do dot -Tpng $f > $f.png; done
+	for f in *.dot; do dot -Tpng $f -o $f.png; done
 
 clean:
 	rm -f *.dot *.png $(EXEC_NAME)

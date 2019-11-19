@@ -116,7 +116,7 @@ char *gen_name(AFND *afnd, int *states, int num_states)
 
 	// Create the name
 	for (int i = 0; i < num_states; i++)
-		sprintf(name + i*3, "q%d-", sorted_states[i]);
+		sprintf(name + i*3, "q%d_", sorted_states[i]);
 
 	// Remove last dash
 	name[num_states * 3 - 1] = '\0';
@@ -192,7 +192,7 @@ int add_lambdas(AFND *afnd, int **lstates, const int *states, int states_n)
 		// Get more memory
 		num_lstates += connections_n;
 		*lstates = realloc(*lstates, num_lstates * sizeof(int));
-		memset(*lstates + (num_lstates - connections_n), -1, num_lstates * sizeof(int));
+		memset(*lstates + (num_lstates - connections_n), -1, connections_n * sizeof(int));
 	
 		// For each connection
 		for (int j = 0; j < connections_n; j++)
@@ -208,6 +208,8 @@ int add_lambdas(AFND *afnd, int **lstates, const int *states, int states_n)
 			else
 				num_lstates--;
 		}
+
+		free(connections);
 	}
 
 	return num_lstates;

@@ -14,6 +14,14 @@ typedef struct _state
     int i_n;        // Size of i_list
 } state;
 
+#define save_state(afnd, sl, i, il, iln) {\
+    sl[i].name = gen_name(afnd, il, iln);\
+    sl[i].type = gen_type(afnd, il, iln);\
+    sl[i].i_list = calloc(iln, sizeof(int));\
+    memcpy(sl[i].i_list, il, iln * sizeof(int));\
+    sl[i].i_n = iln;\
+}
+
 #ifdef DEBUG
 void print_state(const state *s)
 {
@@ -42,14 +50,6 @@ void print_state(const state *s)
         printf(P_INFO "          , %7s, [ ]\n", type_str);
 }
 #endif
-
-#define save_state(afnd, sl, i, il, iln) {\
-    sl[i].name = gen_name(afnd, il, iln);\
-    sl[i].type = gen_type(afnd, il, iln);\
-    sl[i].i_list = calloc(iln, sizeof(int));\
-    memcpy(sl[i].i_list, il, iln * sizeof(int));\
-    sl[i].i_n = iln;\
-}
 
 bool contains(state *transitions, int transitions_n, char *state_name)
 {
@@ -83,11 +83,13 @@ AFND *AFNDTransforma(AFND *afnd)
 
     // Insert the initial state to have something inside the list
     save_state(afnd, f_states, f_states_n, initial_list, initial_list_n);
+    free(initial_list);
+    f_states_n++;
+
 #ifdef DEBUG
-    print_state(&f_states[f_states_n]);
+    print_state(&f_states[f_states_n-1]);
     printf("\n");
 #endif
-    f_states_n++;
 
     // Main loop
     for (int current_state = 0; current_state < f_states_n; current_state++)
@@ -124,6 +126,7 @@ AFND *AFNDTransforma(AFND *afnd)
             f_transitions = realloc(f_transitions, (f_transitions_n + 1) * sizeof(state));
             save_state(afnd, f_transitions, f_transitions_n, tl_list, tl_list_n);
             f_transitions_n++;
+
 #ifdef DEBUG
             printf(P_INFO "Inserted transition (%s):\n", AFNDSimboloEn(afnd, i));
             print_state(&f_transitions[f_transitions_n-1]);
@@ -155,11 +158,45 @@ AFND *AFNDTransforma(AFND *afnd)
     printf("\n"P_INFO"All the transitions:\n");
     for (int i = 0; i < f_transitions_n; i++)
     {
-        printf("\t");
+        if (f_transitions[i].type == -1)
+        {
+            printf("\t [%02d]\n", i);
+            continue;
+        }
+        printf("\t [%02d]", i);
         print_state(&f_transitions[i]);
     }
     printf("\n");
 #endif
+
+    // Create the new automata
+    int n_simbolos = AFNDNumSimbolos(afnd);
+    AFND *afd = AFNDNuevo("stadia", f_states_n, n_simbolos);
+    
+    // Insert the symbols
+    for (int i = 0; i < n_simbolos; i++)
+        AFNDInsertaSimbolo(afd, AFNDSimboloEn(afnd, i));
+
+    // Insert the states
+    for (int i = 0; i < f_states_n; i++)
+        AFNDInsertaEstado(afd, f_states[i].name, f_states[i].type);
+
+    // Insert the normal transitions
+    for (int i = 0; i < f_states_n; i++)
+    {
+        for (int j = 0; j < n_simbolos; j++)
+        {
+            if (f_transitions[i * n_simbolos + j].type != -1)
+            {
+                AFNDInsertaTransicion(
+                    afd,
+                    f_states[i].name,
+                    AFNDSimboloEn(afnd, j),
+                    f_transitions[i * n_simbolos + j].name
+                );
+            }
+        }
+    }
 
     // Free everything
     for (int i = 0; i < f_states_n; i++)
@@ -182,5 +219,5 @@ AFND *AFNDTransforma(AFND *afnd)
     }
     free(f_transitions);
 
-    return NULL;
+    return afd;
 }
