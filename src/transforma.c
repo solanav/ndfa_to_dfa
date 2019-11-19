@@ -64,15 +64,6 @@ bool contains(state *transitions, int transitions_n, char *state_name)
 
 AFND *AFNDTransforma(AFND *afnd)
 {
-    int states[] = {0, 2, 4};
-    int *lstates = NULL;
-    int lstates_n = add_lambdas(afnd, &lstates, states, 3);
-    
-    for (int i = 0; i < lstates_n; i++)
-        printf("%d\n", lstates[i]);
-    
-    exit(0);
-
     // Temporal list of states of final automata
     int f_states_n = 0;
     int f_transitions_n = 0;
@@ -114,7 +105,12 @@ AFND *AFNDTransforma(AFND *afnd)
                 i
             );
 
-            if (t_list_n == 0)
+            // Add the lambdas to the transitions
+            int *tl_list = NULL;
+            int tl_list_n = add_lambdas(afnd, &tl_list, t_list, t_list_n);
+            free(t_list);
+
+            if (tl_list_n == 0)
             {
                 f_transitions = realloc(f_transitions, (f_transitions_n + 1) * sizeof(state));
                 f_transitions[f_transitions_n].type = -1;
@@ -122,11 +118,11 @@ AFND *AFNDTransforma(AFND *afnd)
                 continue;
             }
 
-            char *transition_name = gen_name(afnd, t_list, t_list_n);
+            char *transition_name = gen_name(afnd, tl_list, tl_list_n);
 
             // Insert into the transition array
             f_transitions = realloc(f_transitions, (f_transitions_n + 1) * sizeof(state));
-            save_state(afnd, f_transitions, f_transitions_n, t_list, t_list_n);
+            save_state(afnd, f_transitions, f_transitions_n, tl_list, tl_list_n);
             f_transitions_n++;
 #ifdef DEBUG
             printf(P_INFO "Inserted transition (%s):\n", AFNDSimboloEn(afnd, i));
@@ -138,11 +134,11 @@ AFND *AFNDTransforma(AFND *afnd)
             if (contains(f_states, f_states_n, transition_name) == false)
             {
                 f_states = realloc(f_states, (f_states_n + 1) * sizeof(state));
-                save_state(afnd, f_states, f_states_n, t_list, t_list_n);
+                save_state(afnd, f_states, f_states_n, tl_list, tl_list_n);
                 f_states_n++;
             }
 
-            free(t_list);
+            free(tl_list);
             free(transition_name);
         }
     }

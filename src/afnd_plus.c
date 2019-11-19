@@ -207,10 +207,6 @@ int add_lambdas(AFND *afnd, int **lstates, const int *states, int states_n)
 				(*lstates)[num_lstates - connections_n + j] = connections[j];
 			else
 				num_lstates--;
-
-			for (int k = 0; k < num_lstates; k++)
-				printf("RE > [%d] [%d]\n", k, (*lstates)[k]);
-			printf("\n");
 		}
 	}
 
