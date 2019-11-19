@@ -52,6 +52,10 @@ int get_transitions_x(AFND *afnd, int **t_list, const int *states, int num_state
 			states[i],
 			symbol_i
 		);
+		
+		// If there are lambda transitions
+		// num_transitions =+ get_states_connected(afnd, &tmp_t_list, states[i]);
+
 
 		// For each transition
 		for (int j = 0; j < num_transitions; j++)
@@ -169,5 +173,5 @@ int gen_type(AFND *afnd, int *states, int state_n)
 
 int add_lambdas(AFND *afnd, int **lstates, const int *states, int states_n)
 {
-	
+	return 1;
 }

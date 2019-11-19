@@ -10,9 +10,9 @@ void display(int *ageArray, AFND *afnd);
  * Generate a list of transitions for a state
  * 
  * afnd: afnd to get the transitions from
- * transitions: list to the transitions (memory is allocated inside)
- * num_states: total number of states of the automata
- * state_index: index of the state you want the transitions from
+ * t_list: list to the transitions (memory is allocated inside)
+ * state: index of the state you want the transitions from
+ * symbol_i: symbol with look at transitions
  * 
  * Returns the number of transitions in the given state
  */
@@ -22,9 +22,9 @@ int get_transitions(AFND *afnd, int **t_list, int state, int symbol_i);
  * Generate a list of transitions for several states
  * 
  * afnd: afnd to get the transitions from
- * transitions: list to the transitions (memory is allocated inside)
+ * t_list: list to the transitions (memory is allocated inside)
  * num_states: total number of states of the automata
- * state_index: index of the state you want the transitions from
+ * symbol_i: symbol with look at transitions
  * 
  * Returns the number of transitions in the given state
  */
