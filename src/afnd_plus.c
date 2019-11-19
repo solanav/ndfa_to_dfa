@@ -166,3 +166,8 @@ int gen_type(AFND *afnd, int *states, int state_n)
 
 	return type;
 }
+
+int add_lambdas(AFND *afnd, int **lstates, const int *states, int states_n)
+{
+	
+}

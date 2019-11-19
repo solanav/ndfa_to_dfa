@@ -70,6 +70,15 @@ int get_states_connected(AFND *afnd, int **states, int state);
  */
 int gen_type(AFND *afnd, int *states, int state_n);
 
-void imprime_funcion_transicion(FILE *fd, AFND *p_afnd);
+/**
+ * Given a list of states it returns the list plus all the lambda connections of each state
+ * 
+ * lstates: list plus lambda connections
+ * states: list without lambda connections
+ * states_n: size of the list of states
+ * 
+ * Returns size of lstates
+ */
+int add_lambdas(AFND *afnd, int **lstates, const int *states, int states_n);
 
 #endif
