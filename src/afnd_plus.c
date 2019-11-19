@@ -130,14 +130,21 @@ int get_states_connected(AFND *afnd, int **states, int state)
 {
 	int total_states = AFNDNumEstados(afnd);
 	*states = calloc(total_states, sizeof(int));
-
 	int num_states = 0;
-	for (int i = 0; i < total_states; i++)
+
+	// Save the state we were given
+	(*states)[0] = state;
+	num_states++;
+
+	for (int i = 1; i < total_states; i++)
 	{
-		if (AFNDCierreLTransicionIJ(afnd, state, i) == 1)
+		if (i != state)
 		{
-			(*states)[num_states] = i;
-			num_states++;
+			if (AFNDCierreLTransicionIJ(afnd, state, i) == 1)
+			{
+				(*states)[num_states] = i;
+				num_states++;
+			}
 		}
 	}
 
@@ -173,5 +180,39 @@ int gen_type(AFND *afnd, int *states, int state_n)
 
 int add_lambdas(AFND *afnd, int **lstates, const int *states, int states_n)
 {
-	return 1;
+	int num_lstates = 0;
+	*lstates = calloc(1, sizeof(int));
+
+	for (int i = 0; i < states_n; i++)
+	{
+		// Get list of lambda connections
+		int *connections = NULL; 
+		int connections_n = get_states_connected(afnd, &connections, states[i]);
+    
+		// Get more memory
+		num_lstates += connections_n;
+		*lstates = realloc(*lstates, num_lstates * sizeof(int));
+		memset(*lstates + (num_lstates - connections_n), -1, num_lstates * sizeof(int));
+	
+		// For each connection
+		for (int j = 0; j < connections_n; j++)
+		{
+			// Check we are not repeating
+			int repeated = 0;
+			for (int k = 0; k < num_lstates && repeated == 0; k++)
+				repeated = connections[j] == (*lstates)[k] ? 1 : 0;
+
+			// If not repeated: insert, else don't
+			if (repeated == 0)
+				(*lstates)[num_lstates - connections_n + j] = connections[j];
+			else
+				num_lstates--;
+
+			for (int k = 0; k < num_lstates; k++)
+				printf("RE > [%d] [%d]\n", k, (*lstates)[k]);
+			printf("\n");
+		}
+	}
+
+	return num_lstates;
 }

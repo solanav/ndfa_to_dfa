@@ -64,6 +64,15 @@ bool contains(state *transitions, int transitions_n, char *state_name)
 
 AFND *AFNDTransforma(AFND *afnd)
 {
+    int states[] = {0, 2, 4};
+    int *lstates = NULL;
+    int lstates_n = add_lambdas(afnd, &lstates, states, 3);
+    
+    for (int i = 0; i < lstates_n; i++)
+        printf("%d\n", lstates[i]);
+    
+    exit(0);
+
     // Temporal list of states of final automata
     int f_states_n = 0;
     int f_transitions_n = 0;
