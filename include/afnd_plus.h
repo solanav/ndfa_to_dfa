@@ -4,6 +4,9 @@
 #include <stdbool.h>
 #include "../include/afnd.h"
 
+#define NO_INITIAL 0
+#define INITIAL 1
+
 void display(int *ageArray, AFND *afnd);
 
 /**
@@ -65,10 +68,11 @@ int get_states_connected(AFND *afnd, int **states, int state);
  * 
  * states: list of states to check
  * state_n: number of the states
+ * initial: variable to check if there already is an initial state
  * 
  * Returns: the type of the state as defined in afnd.h
  */
-int gen_type(AFND *afnd, int *states, int state_n);
+int gen_type(AFND *afnd, int *states, int state_n, int *initial);
 
 /**
  * Given a list of states it returns the list plus all the lambda connections of each state

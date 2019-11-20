@@ -34,24 +34,24 @@ typedef enum
 #define FINAL 1
 #define INICIAL_Y_FINAL 2
 #define NORMAL 3
-typedef struct _afnd_ofus_full _afnd_ofus_fast;
-_afnd_ofus_fast *
+typedef struct _afnd_ofus_full state;
+state *
 _afnd_ofus_small(char *nombre, int tipo);
-void _afnd_ofus_big(_afnd_ofus_fast *
+void _afnd_ofus_big(state *
                         _afnd_ofus_ok);
-void _afnd_ofus_hello(FILE *fd, _afnd_ofus_fast *_afnd_ofus_ok);
-int _afnd_ofus_bye(_afnd_ofus_fast *_afnd_ofus_ok, char *nombre);
+void _afnd_ofus_hello(FILE *fd, state *_afnd_ofus_ok);
+int _afnd_ofus_bye(state *_afnd_ofus_ok, char *nombre);
 char *
-_afnd_ofus_magic(_afnd_ofus_fast *_afnd_ofus_ok);
+get_state_name(state *_afnd_ofus_ok);
 int _afnd_ofus_obscure(
-    _afnd_ofus_fast *_afnd_ofus_ok);
-_afnd_ofus_fast *_afnd_ofus_speed(
-    _afnd_ofus_fast *_afnd_ofus_ok);
-int _afnd_ofus_index(_afnd_ofus_fast *
+    state *_afnd_ofus_ok);
+state *_afnd_ofus_speed(
+    state *_afnd_ofus_ok);
+int _afnd_ofus_index(state *
                          _afnd_ofus_bill,
-                     _afnd_ofus_fast *_afnd_ofus_joe);
+                     state *_afnd_ofus_joe);
 void _afnd_ofus_emacs(FILE *fd,
-                      _afnd_ofus_fast *_afnd_ofus_ok);
+                      state *_afnd_ofus_ok);
 #endif
 #ifndef _afnd_ofus_vi
 #define _afnd_ofus_vi
@@ -1153,17 +1153,17 @@ struct _afnd_ofus_full
     char *nombre;
     int tipo;
 };
-_afnd_ofus_fast *_afnd_ofus_small(char *nombre, int tipo)
+state *_afnd_ofus_small(char *nombre, int tipo)
 {
-    _afnd_ofus_fast *
+    state *
         _afnd_ofus_ok;
-    _afnd_ofus_ok = (_afnd_ofus_fast *)malloc(sizeof(_afnd_ofus_fast));
+    _afnd_ofus_ok = (state *)malloc(sizeof(state));
     _afnd_ofus_ok->nombre = (char *)malloc(strlen(nombre) + 1);
     strcpy(_afnd_ofus_ok->nombre, nombre);
     _afnd_ofus_ok->tipo = tipo;
     return _afnd_ofus_ok;
 }
-void _afnd_ofus_big(_afnd_ofus_fast *_afnd_ofus_ok)
+void _afnd_ofus_big(state *_afnd_ofus_ok)
 {
     {
         if (!(_afnd_ofus_ok != NULL))
@@ -1183,7 +1183,7 @@ void _afnd_ofus_big(_afnd_ofus_fast *_afnd_ofus_ok)
     _afnd_ofus_foobar_buggy:;
     }
 }
-void _afnd_ofus_hello(FILE *fd, _afnd_ofus_fast *_afnd_ofus_ok)
+void _afnd_ofus_hello(FILE *fd, state *_afnd_ofus_ok)
 {
     {
         if (!((_afnd_ofus_ok->tipo == INICIAL) || (_afnd_ofus_ok->tipo == INICIAL_Y_FINAL)))
@@ -1202,7 +1202,7 @@ void _afnd_ofus_hello(FILE *fd, _afnd_ofus_fast *_afnd_ofus_ok)
     return;
 }
 int _afnd_ofus_bye(
-    _afnd_ofus_fast *_afnd_ofus_ok, char *nombre)
+    state *_afnd_ofus_ok, char *nombre)
 {
     {
         if (!(strcmp(_afnd_ofus_ok->nombre,
@@ -1215,27 +1215,24 @@ int _afnd_ofus_bye(
     _afnd_ofus_foobar_full:;
     }
 }
-_afnd_ofus_fast *
-_afnd_ofus_speed(_afnd_ofus_fast *_afnd_ofus_ok)
+state *
+_afnd_ofus_speed(state *_afnd_ofus_ok)
 {
-    _afnd_ofus_fast *
+    state *
         _afnd_ofus_baz_baz;
-    _afnd_ofus_baz_baz = _afnd_ofus_small(_afnd_ofus_magic(
+    _afnd_ofus_baz_baz = _afnd_ofus_small(get_state_name(
                                               _afnd_ofus_ok),
                                           _afnd_ofus_obscure(_afnd_ofus_ok));
     return _afnd_ofus_baz_baz;
 }
-char *_afnd_ofus_magic(_afnd_ofus_fast *_afnd_ofus_ok)
+char *get_state_name(state *_afnd_ofus_ok)
 {
-    {
-        if (!(_afnd_ofus_ok == NULL))
-            goto _afnd_ofus_foobar_fast;
-        return NULL;
-    _afnd_ofus_foobar_fast:;
-    }
-    return _afnd_ofus_ok->nombre;
+    if (_afnd_ofus_ok != NULL)
+        return _afnd_ofus_ok->nombre;
+
+    return NULL;
 }
-int _afnd_ofus_obscure(_afnd_ofus_fast *_afnd_ofus_ok)
+int _afnd_ofus_obscure(state *_afnd_ofus_ok)
 {
     {
         if (!(_afnd_ofus_ok == NULL))
@@ -1246,7 +1243,7 @@ int _afnd_ofus_obscure(_afnd_ofus_fast *_afnd_ofus_ok)
     return _afnd_ofus_ok->tipo;
 }
 void _afnd_ofus_emacs(
-    FILE *fd, _afnd_ofus_fast *_afnd_ofus_ok)
+    FILE *fd, state *_afnd_ofus_ok)
 {
     {
         if (!((_afnd_ofus_obscure(_afnd_ofus_ok) == FINAL) || (_afnd_ofus_obscure(_afnd_ofus_ok) == INICIAL_Y_FINAL)))
@@ -1263,7 +1260,7 @@ void _afnd_ofus_emacs(
     _afnd_ofus_foobar_ok:;
     }
 }
-int _afnd_ofus_index(_afnd_ofus_fast *_afnd_ofus_bill, _afnd_ofus_fast *_afnd_ofus_joe) { return strcmp(_afnd_ofus_bill->nombre, _afnd_ofus_joe->nombre); }
+int _afnd_ofus_index(state *_afnd_ofus_bill, state *_afnd_ofus_joe) { return strcmp(_afnd_ofus_bill->nombre, _afnd_ofus_joe->nombre); }
 struct _afnd_ofus_bar_fobaz
 {
     char *nombre;
@@ -2111,7 +2108,7 @@ struct _afnd_ofus_quux_full
 };
 typedef struct _afnd_ofus_quux_full
     _afnd_ofus_quux_big;
-_afnd_ofus_fast *_afnd_ofus_quux_ok(AFND *p_afnd, int pos);
+state *_afnd_ofus_quux_ok(AFND *p_afnd, int pos);
 typedef int *_afnd_ofus_quux_hello;
 struct _afnd_ofus_quux_bye
 {
@@ -2679,8 +2676,8 @@ struct _AFND
         _afnd_ofus_dog_magic;
     int num_estados;
     int num_simbolos;
-    _afnd_ofus_fast **
-        _afnd_ofus_dog_obscure;
+    state **
+        state_list;
     int **_afnd_ofus_dog_speed;
     _afnd_ofus_bar_foobaz *
         _afnd_ofus_dog_index;
@@ -2702,8 +2699,8 @@ AFND *AFNDNuevo(char *nombre, int num_estados, int num_simbolos)
     p_afnd->_afnd_ofus_dog_magic = _afnd_ofus_cia("A", num_simbolos);
     p_afnd->num_estados = num_estados;
     p_afnd->num_simbolos = num_simbolos;
-    p_afnd->_afnd_ofus_dog_obscure = (_afnd_ofus_fast **)malloc(sizeof(_afnd_ofus_fast *) *
-                                                                num_estados);
+    p_afnd->state_list = (state **)malloc(sizeof(state *) *
+                                          num_estados);
     {
         i = 0;
     _afnd_ofus_dog_fbi:
@@ -2715,7 +2712,7 @@ AFND *AFNDNuevo(char *nombre, int num_estados, int num_simbolos)
         goto _afnd_ofus_dog_fbi;
     _afnd_ofus_dog_nasa:
     {
-        p_afnd->_afnd_ofus_dog_obscure[i] = NULL;
+        p_afnd->state_list[i] = NULL;
     }
         goto _afnd_ofus_dog_err;
     _afnd_ofus_dog_cia:;
@@ -2861,7 +2858,7 @@ void AFNDImprime(FILE *fd, AFND *p_afnd)
     }
     fprintf(fd, "\n\tnum_estados = %d\n", p_afnd->num_estados);
     {
-        if (!(p_afnd->_afnd_ofus_dog_obscure != NULL))
+        if (!(p_afnd->state_list != NULL))
             goto _afnd_ofus_cat_fish;
         {
             fprintf(fd, "\n\tQ={");
@@ -2877,9 +2874,9 @@ void AFNDImprime(FILE *fd, AFND *p_afnd)
             _afnd_ofus_cat_bug:
             {
                 {
-                    if (!(p_afnd->_afnd_ofus_dog_obscure[i] != NULL))
+                    if (!(p_afnd->state_list[i] != NULL))
                         goto _afnd_ofus_cat_buggy;
-                    _afnd_ofus_hello(fd, p_afnd->_afnd_ofus_dog_obscure[i]);
+                    _afnd_ofus_hello(fd, p_afnd->state_list[i]);
                 _afnd_ofus_cat_buggy:;
                 }
                 fprintf(fd, " ");
@@ -2979,11 +2976,11 @@ int _afnd_ofus_cat_index(AFND *p_afnd, char *nombre)
     _afnd_ofus_cat_emacs:
     {
         {
-            if (!(p_afnd->_afnd_ofus_dog_obscure[i] != NULL))
+            if (!(p_afnd->state_list[i] != NULL))
                 goto _afnd_ofus_cat_rms;
             {
                 {
-                    if (!(strcmp(_afnd_ofus_magic(p_afnd->_afnd_ofus_dog_obscure[i]), nombre) == 0))
+                    if (!(strcmp(get_state_name(p_afnd->state_list[i]), nombre) == 0))
                         goto _afnd_ofus_cat_fbi;
                     {
                         return 1;
@@ -3001,16 +2998,10 @@ int _afnd_ofus_cat_index(AFND *p_afnd, char *nombre)
 }
 char *AFNDNombreEstadoEn(AFND *p_afnd, int pos)
 {
-    {
-        if (!(pos < p_afnd->num_estados))
-            goto _afnd_ofus_cat_cia;
-        return _afnd_ofus_magic(
-            p_afnd->_afnd_ofus_dog_obscure[pos]);
-        goto _afnd_ofus_cat_nasa;
-    _afnd_ofus_cat_cia:;
+
+    if (pos > p_afnd->num_estados)
         return NULL;
-    _afnd_ofus_cat_nasa:;
-    }
+    return get_state_name(p_afnd->state_list[pos]);
 }
 char *AFNDSimboloEn(AFND
                         *p_afnd,
@@ -3054,7 +3045,7 @@ void AFNDElimina(AFND *p_afnd)
     _afnd_ofus_cat_hint:;
     }
     {
-        if (!(p_afnd->_afnd_ofus_dog_obscure != NULL))
+        if (!(p_afnd->state_list != NULL))
             goto _afnd_ofus_cat_black;
         {
             {
@@ -3068,13 +3059,13 @@ void AFNDElimina(AFND *p_afnd)
                 goto _afnd_ofus_cat_red;
             _afnd_ofus_cat_yellow:
             {
-                _afnd_ofus_big(p_afnd->_afnd_ofus_dog_obscure[i]);
+                _afnd_ofus_big(p_afnd->state_list[i]);
             }
                 goto _afnd_ofus_cat_blue;
             _afnd_ofus_cat_green:;
             }
-            free(p_afnd->_afnd_ofus_dog_obscure);
-            p_afnd->_afnd_ofus_dog_obscure = NULL;
+            free(p_afnd->state_list);
+            p_afnd->state_list = NULL;
         }
     _afnd_ofus_cat_black:;
     }
@@ -3187,7 +3178,7 @@ int AFNDIndiceDeEstado(
     {
         {
             if (!(
-                    _afnd_ofus_bye(p_afnd->_afnd_ofus_dog_obscure[i], nombre)))
+                    _afnd_ofus_bye(p_afnd->state_list[i], nombre)))
                 goto _afnd_ofus_fish_bug;
             return i;
         _afnd_ofus_fish_bug:;
@@ -3224,11 +3215,11 @@ AFNDInsertaEstado(AFND *p_afnd, char *nombre, int tipo)
     _afnd_ofus_fish_small:
     {
         {
-            if (!(p_afnd->_afnd_ofus_dog_obscure[i] == NULL))
+            if (!(p_afnd->state_list[i] == NULL))
                 goto _afnd_ofus_fish_ok;
             {
-                p_afnd->_afnd_ofus_dog_obscure[i] = _afnd_ofus_small(nombre,
-                                                                     tipo);
+                p_afnd->state_list[i] = _afnd_ofus_small(nombre,
+                                                         tipo);
                 goto _afnd_ofus_fish_fast;
             }
         _afnd_ofus_fish_ok:;
@@ -3305,7 +3296,7 @@ void AFNDImprimeConjuntoEstadosActual(FILE *fd, AFND *p_afnd)
                     if (!(p_afnd->_afnd_ofus_dog_vi[i] == 1))
                         goto _afnd_ofus_fish_vi;
                     {
-                        _afnd_ofus_hello(fd, p_afnd->_afnd_ofus_dog_obscure[i]);
+                        _afnd_ofus_hello(fd, p_afnd->state_list[i]);
                     }
                 _afnd_ofus_fish_vi:;
                 }
@@ -3516,8 +3507,8 @@ int AFNDIndiceEstadoInicial(AFND *p_afnd)
     _afnd_ofus_gasp_mum:
     {
         {
-            if (!((_afnd_ofus_obscure(p_afnd->_afnd_ofus_dog_obscure[i]) == INICIAL) || (_afnd_ofus_obscure(p_afnd->_afnd_ofus_dog_obscure[i]) ==
-                                                                                         INICIAL_Y_FINAL)))
+            if (!((_afnd_ofus_obscure(p_afnd->state_list[i]) == INICIAL) || (_afnd_ofus_obscure(p_afnd->state_list[i]) ==
+                                                                             INICIAL_Y_FINAL)))
                 goto _afnd_ofus_gasp_disk;
             return i;
         _afnd_ofus_gasp_disk:;
@@ -3644,7 +3635,7 @@ int AFNDIndicePrimerEstadoFinal(AFND *p_afnd)
 AFND *_afnd_ofus_gasp_nasa(AFND *_afnd_ofus_gasp_err, AFND *_afnd_ofus_gasp_google, char *_afnd_ofus_gasp_yahoo, int _afnd_ofus_gasp_trick)
 {
     int i, j, _afnd_ofus_foobaz_cyan;
-    _afnd_ofus_fast *_afnd_ofus_gasp_hint;
+    state *_afnd_ofus_gasp_hint;
     int tipo;
     char *_afnd_ofus_fobar_vi;
     {
@@ -3690,10 +3681,10 @@ AFND *_afnd_ofus_gasp_nasa(AFND *_afnd_ofus_gasp_err, AFND *_afnd_ofus_gasp_goog
             }
         _afnd_ofus_gasp_magenta:;
         }
-        _afnd_ofus_fobar_vi = (char *)malloc(sizeof(char) * (strlen(_afnd_ofus_gasp_yahoo) + strlen(_afnd_ofus_magic(_afnd_ofus_gasp_hint)) + 1));
+        _afnd_ofus_fobar_vi = (char *)malloc(sizeof(char) * (strlen(_afnd_ofus_gasp_yahoo) + strlen(get_state_name(_afnd_ofus_gasp_hint)) + 1));
         strcpy(_afnd_ofus_fobar_vi, _afnd_ofus_gasp_yahoo);
         strcat(
-            _afnd_ofus_fobar_vi, _afnd_ofus_magic(_afnd_ofus_gasp_hint));
+            _afnd_ofus_fobar_vi, get_state_name(_afnd_ofus_gasp_hint));
         AFNDInsertaEstado(
             _afnd_ofus_gasp_err, _afnd_ofus_fobar_vi, tipo);
         free(_afnd_ofus_fobar_vi);
@@ -3899,14 +3890,14 @@ AFND *_afnd_ofus_bad_rms(AFND *
                                   _afnd_ofus_bad_fbi->num_simbolos);
     return _afnd_ofus_bad_vi;
 }
-_afnd_ofus_fast *
-_afnd_ofus_quux_ok(AFND *p_afnd, int pos) { return p_afnd->_afnd_ofus_dog_obscure[pos]; }
-_afnd_ofus_fast *_afnd_ofus_bad_cia(AFND *p_afnd, char *nombre)
+state *
+_afnd_ofus_quux_ok(AFND *p_afnd, int pos) { return p_afnd->state_list[pos]; }
+state *_afnd_ofus_bad_cia(AFND *p_afnd, char *nombre)
 {
     int pos;
     pos =
         AFNDIndiceDeEstado(p_afnd, nombre);
-    return p_afnd->_afnd_ofus_dog_obscure[pos];
+    return p_afnd->state_list[pos];
 }
 int AFNDTransicionIndicesEstadoiSimboloEstadof(AFND *p_afnd, int i_e1, int i_s,
                                                int i_e2) { return p_afnd->_afnd_ofus_dog_bill[i_e1][i_s][i_e2]; }
@@ -3960,7 +3951,7 @@ _afnd_ofus_bad_trick(AFND *_afnd_ofus_bad_hint, AFND *_afnd_ofus_bad_black)
     AFND *
         _afnd_ofus_gasp_err;
     int i, j, _afnd_ofus_foobaz_cyan;
-    _afnd_ofus_fast *
+    state *
         _afnd_ofus_gasp_hint;
     int tipo;
     char *_afnd_ofus_fobar_vi;
@@ -4009,10 +4000,10 @@ _afnd_ofus_bad_trick(AFND *_afnd_ofus_bad_hint, AFND *_afnd_ofus_bad_black)
         tipo = NORMAL;
         _afnd_ofus_fobar_vi = (char *)malloc(sizeof(
                                                  char) *
-                                             (strlen(_afnd_ofus_bad_red) + strlen(_afnd_ofus_magic(_afnd_ofus_gasp_hint)) + 1));
+                                             (strlen(_afnd_ofus_bad_red) + strlen(get_state_name(_afnd_ofus_gasp_hint)) + 1));
         strcpy(_afnd_ofus_fobar_vi, _afnd_ofus_bad_red);
         strcat(
-            _afnd_ofus_fobar_vi, _afnd_ofus_magic(_afnd_ofus_gasp_hint));
+            _afnd_ofus_fobar_vi, get_state_name(_afnd_ofus_gasp_hint));
         AFNDInsertaEstado(
             _afnd_ofus_gasp_err, _afnd_ofus_fobar_vi, tipo);
         free(_afnd_ofus_fobar_vi);
@@ -4037,9 +4028,9 @@ _afnd_ofus_bad_trick(AFND *_afnd_ofus_bad_hint, AFND *_afnd_ofus_bad_black)
         tipo = NORMAL;
         _afnd_ofus_fobar_vi = (char *)malloc(sizeof(
                                                  char) *
-                                             (strlen(_afnd_ofus_bad_green) + strlen(_afnd_ofus_magic(_afnd_ofus_gasp_hint)) + 1));
+                                             (strlen(_afnd_ofus_bad_green) + strlen(get_state_name(_afnd_ofus_gasp_hint)) + 1));
         strcpy(_afnd_ofus_fobar_vi, _afnd_ofus_bad_green);
-        strcat(_afnd_ofus_fobar_vi, _afnd_ofus_magic(_afnd_ofus_gasp_hint));
+        strcat(_afnd_ofus_fobar_vi, get_state_name(_afnd_ofus_gasp_hint));
         AFNDInsertaEstado(_afnd_ofus_gasp_err, _afnd_ofus_fobar_vi, tipo);
         free(
             _afnd_ofus_fobar_vi);
@@ -4260,7 +4251,7 @@ _afnd_ofus_bug_green(AFND *_afnd_ofus_gasp_google)
     char *_afnd_ofus_gasp_yahoo = "X";
     int i, j,
         _afnd_ofus_foobaz_cyan;
-    _afnd_ofus_fast *_afnd_ofus_gasp_hint;
+    state *_afnd_ofus_gasp_hint;
     int tipo;
     int
         _afnd_ofus_bug_yellow,
@@ -4289,10 +4280,10 @@ _afnd_ofus_bug_green(AFND *_afnd_ofus_gasp_google)
         _afnd_ofus_gasp_hint =
             _afnd_ofus_quux_ok(_afnd_ofus_gasp_google, i);
         tipo = NORMAL;
-        _afnd_ofus_fobar_vi = (char *)malloc(sizeof(char) * (strlen(_afnd_ofus_gasp_yahoo) + strlen(_afnd_ofus_magic(_afnd_ofus_gasp_hint)) + 1));
+        _afnd_ofus_fobar_vi = (char *)malloc(sizeof(char) * (strlen(_afnd_ofus_gasp_yahoo) + strlen(get_state_name(_afnd_ofus_gasp_hint)) + 1));
         strcpy(_afnd_ofus_fobar_vi,
                _afnd_ofus_gasp_yahoo);
-        strcat(_afnd_ofus_fobar_vi, _afnd_ofus_magic(
+        strcat(_afnd_ofus_fobar_vi, get_state_name(
                                         _afnd_ofus_gasp_hint));
         AFNDInsertaEstado(_afnd_ofus_gasp_err,
                           _afnd_ofus_fobar_vi, tipo);
@@ -4496,7 +4487,7 @@ void AFNDADot(AFND *
     {
         printf("ESTADO A DOT");
         _afnd_ofus_emacs(
-            _afnd_ofus_silly_fast, p_afnd->_afnd_ofus_dog_obscure[i]);
+            _afnd_ofus_silly_fast, p_afnd->state_list[i]);
     }
         goto _afnd_ofus_silly_bye;
     _afnd_ofus_silly_ok:;
@@ -4598,4 +4589,4 @@ void AFNDADot(AFND *
 int AFNDNumSimbolos(AFND *p_afnd) { return p_afnd
                                         ->num_simbolos; }
 int AFNDNumEstados(AFND *p_afnd) { return p_afnd->num_estados; }
-int AFNDTipoEstadoEn(AFND *p_afnd, int pos) { return _afnd_ofus_obscure(p_afnd->_afnd_ofus_dog_obscure[pos]); }
+int AFNDTipoEstadoEn(AFND *p_afnd, int pos) { return _afnd_ofus_obscure(p_afnd->state_list[pos]); }

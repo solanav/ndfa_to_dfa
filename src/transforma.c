@@ -14,9 +14,9 @@ typedef struct _state
     int i_n;        // Size of i_list
 } state;
 
-#define save_state(afnd, sl, i, il, iln) {\
+#define save_state(afnd, sl, i, il, iln, initial) {\
     sl[i].name = gen_name(afnd, il, iln);\
-    sl[i].type = gen_type(afnd, il, iln);\
+    sl[i].type = gen_type(afnd, il, iln, initial);\
     sl[i].i_list = calloc(iln, sizeof(int));\
     memcpy(sl[i].i_list, il, iln * sizeof(int));\
     sl[i].i_n = iln;\
@@ -82,7 +82,8 @@ AFND *AFNDTransforma(AFND *afnd)
 #endif
 
     // Insert the initial state to have something inside the list
-    save_state(afnd, f_states, f_states_n, initial_list, initial_list_n);
+    int initial = NO_INITIAL;
+    save_state(afnd, f_states, f_states_n, initial_list, initial_list_n, &initial);
     free(initial_list);
     f_states_n++;
 
@@ -117,6 +118,7 @@ AFND *AFNDTransforma(AFND *afnd)
                 f_transitions = realloc(f_transitions, (f_transitions_n + 1) * sizeof(state));
                 f_transitions[f_transitions_n].type = -1;
                 f_transitions_n++;
+                free(tl_list);
                 continue;
             }
 
@@ -124,7 +126,7 @@ AFND *AFNDTransforma(AFND *afnd)
 
             // Insert into the transition array
             f_transitions = realloc(f_transitions, (f_transitions_n + 1) * sizeof(state));
-            save_state(afnd, f_transitions, f_transitions_n, tl_list, tl_list_n);
+            save_state(afnd, f_transitions, f_transitions_n, tl_list, tl_list_n, &initial);
             f_transitions_n++;
 
 #ifdef DEBUG
@@ -137,7 +139,7 @@ AFND *AFNDTransforma(AFND *afnd)
             if (contains(f_states, f_states_n, transition_name) == false)
             {
                 f_states = realloc(f_states, (f_states_n + 1) * sizeof(state));
-                save_state(afnd, f_states, f_states_n, tl_list, tl_list_n);
+                save_state(afnd, f_states, f_states_n, tl_list, tl_list_n, &initial);
                 f_states_n++;
             }
 
@@ -171,6 +173,7 @@ AFND *AFNDTransforma(AFND *afnd)
 
     // Create the new automata
     int n_simbolos = AFNDNumSimbolos(afnd);
+    printf("Creating afnd with %d states and %d symbols\n", f_states_n, n_simbolos);
     AFND *afd = AFNDNuevo("stadia", f_states_n, n_simbolos);
     
     // Insert the symbols

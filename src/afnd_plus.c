@@ -12,10 +12,9 @@ int get_transitions(AFND *afnd, int **t_list, int state, int symbol_i)
 {
 	int transitions = 0; // Count the number of transitions
 	int num_states = AFNDNumEstados(afnd);
-	int num_symbols = AFNDNumSimbolos(afnd);
 
 	// Get memory for the max number of transitions we can have
-	*t_list = calloc(num_symbols, sizeof(int));
+	*t_list = calloc(num_states, sizeof(int));
 
 	for (int i = 0; i < num_states; i++)
 	{
@@ -52,10 +51,6 @@ int get_transitions_x(AFND *afnd, int **t_list, const int *states, int num_state
 			states[i],
 			symbol_i
 		);
-		
-		// If there are lambda transitions
-		// num_transitions =+ get_states_connected(afnd, &tmp_t_list, states[i]);
-
 
 		// For each transition
 		for (int j = 0; j < num_transitions; j++)
@@ -153,19 +148,18 @@ int get_states_connected(AFND *afnd, int **states, int state)
 	return num_states;
 }
 
-int gen_type(AFND *afnd, int *states, int state_n)
+int gen_type(AFND *afnd, int *states, int state_n, int *initial)
 {
-	static int initial = 0;
 	int type = NORMAL;
 
 	for (int i = 0; i < state_n; i++)
 	{
 		int tmp_type = AFNDTipoEstadoEn(afnd, states[i]);
 
-		if (tmp_type == INICIAL && initial == 0)
+		if (tmp_type == INICIAL && *initial == NO_INITIAL)
 		{
 			type = INICIAL;
-			initial++;
+			*initial = INITIAL;
 		}
 
 		else if (tmp_type == FINAL && type == NORMAL)
