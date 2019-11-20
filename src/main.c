@@ -6,11 +6,10 @@
 #include "../include/transforma.h"
 #include "../include/types.h"
 
-void AFND1()
+AFND *AFND1()
 {
 	AFND *p_afnd;
-	AFND *afd;
-	p_afnd = AFNDNuevo("af1", 6, 3);
+	p_afnd = AFNDNuevo("afnd1", 6, 3);
 
 	// SIMBOLOS
 	AFNDInsertaSimbolo(p_afnd, "+,-");
@@ -47,27 +46,14 @@ void AFND1()
 	AFNDInsertaLTransicion(p_afnd, "q3", "q5");
 	AFNDCierraLTransicion(p_afnd);
 
-	AFNDImprime(stdout, p_afnd);
-
-	afd = AFNDTransforma(p_afnd);
-	if (afd == NULL)
-	{
-		printf(P_ERROR "AFNDTransforma returned NULL\n");
-		AFNDElimina(p_afnd);
-		return;
-	}
-	AFNDADot(afd);
-
-	AFNDElimina(afd);
-	AFNDElimina(p_afnd);
+	return p_afnd;
 }
 
-void AFND2()
+AFND *AFND2()
 {
 
 	AFND *p_afnd;
-	AFND *afd;
-	p_afnd = AFNDNuevo("af2", 3, 2);
+	p_afnd = AFNDNuevo("afnd2", 3, 2);
 
 	AFNDInsertaSimbolo(p_afnd, "0");
 	AFNDInsertaSimbolo(p_afnd, "1");
@@ -84,26 +70,14 @@ void AFND2()
 	// There are not lambda transitions in this example
 	AFNDCierraLTransicion(p_afnd);
 
-	AFNDImprime(stdout, p_afnd);
-
-	afd = AFNDTransforma(p_afnd);
-	if (afd == NULL)
-	{
-		printf(P_ERROR "AFNDTransforma returned NULL\n");
-		return;
-	}
-	AFNDADot(afd);
-
-	AFNDElimina(afd);
-	AFNDElimina(p_afnd);
+	return p_afnd;
 }
 
-void AFND3()
+AFND *AFND3()
 {
 
 	AFND *p_afnd;
-	AFND *afd;
-	p_afnd = AFNDNuevo("af2", 3, 2);
+	p_afnd = AFNDNuevo("afnd3", 3, 2);
 
 	// SIMBOLOS
 	AFNDInsertaSimbolo(p_afnd, "0");
@@ -129,26 +103,13 @@ void AFND3()
 	AFNDInsertaLTransicion(p_afnd, "q1", "q2");
 	AFNDCierraLTransicion(p_afnd);
 
-	AFNDImprime(stdout, p_afnd);
-
-	afd = AFNDTransforma(p_afnd);
-	if (afd == NULL)
-	{
-		printf(P_ERROR "AFNDTransforma returned NULL\n");
-		return;
-	}
-	AFNDADot(afd);
-
-	AFNDElimina(afd);
-	AFNDElimina(p_afnd);
+	return p_afnd;
 }
 
-void AFND4()
+AFND *AFND4()
 {
-
 	AFND *p_afnd;
-	AFND *afd;
-	p_afnd = AFNDNuevo("af2", 5, 2);
+	p_afnd = AFNDNuevo("afnd4", 5, 2);
 
 	// SIMBOLOS
 	AFNDInsertaSimbolo(p_afnd, "0");
@@ -173,30 +134,31 @@ void AFND4()
 	AFNDInsertaLTransicion(p_afnd, "q0", "q2");
 	AFNDCierraLTransicion(p_afnd);
 
-	AFNDImprime(stdout, p_afnd);
-
-	afd = AFNDTransforma(p_afnd);
-	if (afd == NULL)
-	{
-		printf(P_ERROR "AFNDTransforma returned NULL\n");
-		return;
-	}
-	AFNDADot(afd);
-
-	AFNDElimina(afd);
-	AFNDElimina(p_afnd);
+	return p_afnd;
 }
 
 int main(int argc, char **argv)
 {
-	// AFND practica
-	AFND1();
-	// AFND transparencias
-	AFND2();
-	// https://www.geeksforgeeks.org/program-implement-nfa-epsilon-move-dfa-conversion/
-	AFND3();
-	// Example 1 -> https://www.javatpoint.com/automata-conversion-from-nfa-with-null-to-dfa
-	AFND4();
+	AFND *afd;
+	AFND *(*test_afnd[])() = {AFND1, AFND2, AFND3, AFND4};
 
-	return 0;
+	// AFND practica
+	for (int i = 0; i < 4; i++)
+	{
+		AFND *p_afnd = (*test_afnd[i])();
+
+		afd = AFNDTransforma(p_afnd);
+		if (afd == NULL)
+		{
+			printf(P_ERROR "AFNDTransforma returned NULL\n");
+			AFNDElimina(p_afnd);
+			return EXIT_SUCCESS;
+		}
+		AFNDADot(afd);
+
+		AFNDElimina(afd);
+		AFNDElimina(p_afnd);
+	}
+
+	return EXIT_SUCCESS;
 }

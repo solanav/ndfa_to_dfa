@@ -4,6 +4,9 @@
 #include <stdbool.h>
 #include "../include/afnd.h"
 
+typedef unsigned int state_i;
+typedef unsigned int symbol_i;
+
 #define NO_INITIAL 0
 #define INITIAL 1
 
